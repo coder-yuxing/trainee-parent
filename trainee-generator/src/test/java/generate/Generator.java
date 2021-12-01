@@ -1,9 +1,9 @@
 package generate;
 
 import com.yuxing.trainee.generator.application.Generate;
-import com.yuxing.trainee.generator.domain.valueobject.DatabaseType;
-import com.yuxing.trainee.generator.domain.valueobject.GlobalConfig;
-import com.yuxing.trainee.generator.domain.valueobject.TableConfig;
+import com.yuxing.trainee.generator.domain.valueobject.datatype.DatabaseType;
+import com.yuxing.trainee.generator.domain.valueobject.config.GlobalConfig;
+import com.yuxing.trainee.generator.domain.valueobject.config.TableConfig;
 
 import java.util.Collections;
 import java.util.List;

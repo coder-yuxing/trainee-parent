@@ -1,4 +1,4 @@
-package com.yuxing.trainee.generator.domain.valueobject;
+package com.yuxing.trainee.generator.domain.valueobject.datatype;
 
 /**
  * 数据类型映射

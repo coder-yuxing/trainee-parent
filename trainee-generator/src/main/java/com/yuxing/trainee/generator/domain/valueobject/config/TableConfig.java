@@ -1,4 +1,4 @@
-package com.yuxing.trainee.generator.domain.valueobject;
+package com.yuxing.trainee.generator.domain.valueobject.config;
 
 import lombok.Builder;
 import lombok.Data;

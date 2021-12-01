@@ -1,4 +1,4 @@
-package com.yuxing.trainee.generator.domain.valueobject;
+package com.yuxing.trainee.generator.domain.valueobject.datatype;
 
 import com.yuxing.trainee.generator.infrastructure.util.StringUtils;
 import lombok.AllArgsConstructor;
@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
 
-/**database
+/**
  * mysql 与 java 数据类型映射表
  *
  * @author yuxing

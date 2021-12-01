@@ -1,5 +1,7 @@
-package com.yuxing.trainee.generator.domain.valueobject;
+package com.yuxing.trainee.generator.domain.valueobject.template;
 
+import com.yuxing.trainee.generator.domain.valueobject.config.GlobalConfig;
+import com.yuxing.trainee.generator.domain.valueobject.config.TableConfig;
 import lombok.Data;
 
 import java.util.List;

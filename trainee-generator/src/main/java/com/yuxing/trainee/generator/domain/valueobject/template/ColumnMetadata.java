@@ -1,5 +1,6 @@
-package com.yuxing.trainee.generator.domain.valueobject;
+package com.yuxing.trainee.generator.domain.valueobject.template;
 
+import com.yuxing.trainee.generator.domain.valueobject.datatype.DataTypeMapping;
 import lombok.Data;
 
 /**

@@ -1,4 +1,4 @@
-package com.yuxing.trainee.generator.domain.valueobject;
+package com.yuxing.trainee.generator.domain.valueobject.datatype;
 
 /**
  * 当前支持的数据库类型
