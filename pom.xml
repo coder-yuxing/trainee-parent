@@ -30,7 +30,7 @@
 
     <freemarker.version>2.3.29</freemarker.version>
     <lombok.version>1.18.12</lombok.version>
-    <boush.version>1.0-SNAPSHOT</boush.version>
+    <mapstruct.version>1.4.1.Final</mapstruct.version>
 
     <!-- 日志 -->
     <slf4j-api.version>1.7.7</slf4j-api.version>
@@ -87,6 +87,18 @@
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>${lombok.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>${mapstruct.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct-processor</artifactId>
+        <version>${mapstruct.version}</version>
       </dependency>
 
       <!-- 日志依赖引入 -->

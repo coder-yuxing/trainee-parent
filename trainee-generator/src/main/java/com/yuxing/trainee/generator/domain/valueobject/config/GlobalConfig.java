@@ -1,47 +1,62 @@
 package com.yuxing.trainee.generator.domain.valueobject.config;
 
 import com.yuxing.trainee.generator.domain.valueobject.datatype.DatabaseType;
-import com.yuxing.trainee.generator.infrastructure.util.StringUtils;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 全局配置
  *
  * @author yuxing
  */
-@Data
+@Getter
 public class GlobalConfig {
 
-    GlobalConfig(String configPath, DatabaseType databaseType, String beanModuleName, String beanPackage, String mapperModuleName, String mapperPackage, String beanMapperPackage, List<TableConfig> tableConfigs, boolean isCover, String author, String datePattern) {
+    private static final String DEFAULT_VALUE = "-";
+
+    private static final String DEFAULT_DATE_PATTERN = "yyyy/MM/dd";
+
+    private static final String DEFAULT_MODULE_NAME = "generate";
+
+    private static final String DEFAULT_PACKAGE = "generate";
+
+    public GlobalConfig(String configPath, DatabaseType databaseType, List<TableConfig> tableConfigs) {
         this.configPath = configPath;
         this.databaseType = databaseType;
-        this.beanModuleName = beanModuleName;
-        this.beanPackage = beanPackage;
-        this.mapperModuleName = mapperModuleName;
-        this.mapperPackage = mapperPackage;
-        this.beanMapperPackage = beanMapperPackage;
         this.tableConfigs = tableConfigs;
-        this.isCover = isCover;
-        this.author = author;
-        this.datePattern = datePattern;
-    }
-
-    public static GlobalConfig.GlobalConfigBuilder builder() {
-        return new GlobalConfig.GlobalConfigBuilder();
     }
 
     /**
      * 配置文件路径
      */
-    private String configPath;
+    private final String configPath;
 
     /**
      * 数据库类型
      */
-    private DatabaseType databaseType;
+    private final DatabaseType databaseType;
+
+    /**
+     * 数据表配置
+     */
+    private final List<TableConfig> tableConfigs;
+
+    /**
+     * 是否覆盖文件
+     */
+    private boolean isCover;
+
+    /**
+     * 创建人
+     */
+    private String author;
+
+    /**
+     * 日期格式
+     */
+    private String datePattern;
 
     /**
      * bean所属模块名称
@@ -68,112 +83,36 @@ public class GlobalConfig {
      */
     private String beanMapperPackage;
 
-    /**
-     * 数据表配置
-     */
-    private List<TableConfig> tableConfigs;
+    public void setCover(boolean cover) {
+        isCover = cover;
+    }
 
-    /**
-     * 是否覆盖文件
-     */
-    private boolean isCover;
+    public void setAuthor(String author) {
+        this.author = Optional.ofNullable(author).orElse(DEFAULT_VALUE);
+    }
 
-    /**
-     * 创建人
-     */
-    private String author;
+    public void setDatePattern(String datePattern) {
+        this.datePattern = Optional.ofNullable(datePattern).orElse(DEFAULT_DATE_PATTERN);
+    }
 
-    /**
-     * 日期格式
-     */
-    private String datePattern;
+    public void setBeanModuleName(String beanModuleName) {
+        this.beanModuleName = Optional.ofNullable(beanModuleName).orElse(DEFAULT_MODULE_NAME);
+    }
 
-    public static class GlobalConfigBuilder {
-        private String configPath;
-        private DatabaseType databaseType;
-        private String beanModuleName;
-        private String beanPackage;
-        private String mapperModuleName;
-        private String mapperPackage;
-        private String beanMapperPackage;
-        private List<TableConfig> tableConfigs;
-        private boolean isCover;
-        private String author;
-        private String datePattern;
+    public void setBeanPackage(String beanPackage) {
+        this.beanPackage = Optional.ofNullable(beanPackage).orElse(DEFAULT_PACKAGE);
+    }
 
-        GlobalConfigBuilder() {
-        }
+    public void setMapperModuleName(String mapperModuleName) {
+        this.mapperModuleName = Optional.ofNullable(mapperModuleName).orElse(DEFAULT_MODULE_NAME);
+    }
 
-        public GlobalConfig.GlobalConfigBuilder configPath(String configPath) {
-            this.configPath = configPath;
-            return this;
-        }
+    public void setMapperPackage(String mapperPackage) {
+        this.mapperPackage = Optional.ofNullable(mapperPackage).orElse(DEFAULT_PACKAGE);
+    }
 
-        public GlobalConfig.GlobalConfigBuilder databaseType(DatabaseType databaseType) {
-            this.databaseType = databaseType;
-            return this;
-        }
-
-        public GlobalConfig.GlobalConfigBuilder beanModuleName(String beanModuleName) {
-            this.beanModuleName = beanModuleName;
-            return this;
-        }
-
-        public GlobalConfig.GlobalConfigBuilder beanPackage(String beanPackage) {
-            this.beanPackage = beanPackage;
-            return this;
-        }
-
-        public GlobalConfig.GlobalConfigBuilder mapperModuleName(String mapperModuleName) {
-            this.mapperModuleName = mapperModuleName;
-            return this;
-        }
-
-        public GlobalConfig.GlobalConfigBuilder mapperPackage(String mapperPackage) {
-            this.mapperPackage = mapperPackage;
-            return this;
-        }
-
-        public GlobalConfig.GlobalConfigBuilder beanMapperPackage(String beanMapperPackage) {
-            this.beanMapperPackage = beanMapperPackage;
-            return this;
-        }
-
-        public GlobalConfig.GlobalConfigBuilder tableConfigs(List<TableConfig> tableConfigs) {
-            this.tableConfigs = tableConfigs;
-            return this;
-        }
-
-        public GlobalConfig.GlobalConfigBuilder isCover(boolean isCover) {
-            this.isCover = isCover;
-            return this;
-        }
-
-        public GlobalConfig.GlobalConfigBuilder author(String author) {
-            this.author = author;
-            return this;
-        }
-
-        public GlobalConfig.GlobalConfigBuilder datePattern(String datePattern) {
-            this.datePattern = datePattern;
-            return this;
-        }
-
-        public GlobalConfig build() {
-            if (StringUtils.isEmpty(this.configPath)) {
-                throw new IllegalArgumentException("configPath 不允许为空");
-            }
-
-            if (Objects.isNull(this.databaseType)) {
-                throw new IllegalArgumentException("databaseType 不允许为空");
-            }
-
-            return new GlobalConfig(this.configPath, this.databaseType, this.beanModuleName, this.beanPackage, this.mapperModuleName, this.mapperPackage, this.beanMapperPackage, this.tableConfigs, this.isCover, this.author, this.datePattern);
-        }
-
-        public String toString() {
-            return "GlobalConfig.GlobalConfigBuilder(configPath=" + this.configPath + ", databaseType=" + this.databaseType + ", beanModuleName=" + this.beanModuleName + ", beanPackage=" + this.beanPackage + ", mapperModuleName=" + this.mapperModuleName + ", mapperPackage=" + this.mapperPackage + ", beanMapperPackage=" + this.beanMapperPackage + ", tableConfigs=" + this.tableConfigs + ", isCover=" + this.isCover + ", author=" + this.author + ", datePattern=" + this.datePattern + ")";
-        }
+    public void setBeanMapperPackage(String beanMapperPackage) {
+        this.beanMapperPackage = Optional.ofNullable(beanMapperPackage).orElse(DEFAULT_PACKAGE);
     }
 
 }

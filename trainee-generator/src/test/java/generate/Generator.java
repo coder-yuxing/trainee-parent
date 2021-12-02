@@ -1,9 +1,8 @@
 package generate;
 
 import com.yuxing.trainee.generator.application.Generate;
+import com.yuxing.trainee.generator.application.command.GenerateMapperFileCommand;
 import com.yuxing.trainee.generator.domain.valueobject.datatype.DatabaseType;
-import com.yuxing.trainee.generator.domain.valueobject.config.GlobalConfig;
-import com.yuxing.trainee.generator.domain.valueobject.config.TableConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,12 +19,14 @@ public class Generator {
     private static final String FORMAT = "yyyy/MM/dd";
 
     public static void main(String[] args) throws Exception {
-        TableConfig tableConfig1 = TableConfig.builder().tableName("t_actuarial_ignore_update_item").beanName("ActuarialIgnoreUpdateItem").remarks("商品").build();
+        GenerateMapperFileCommand.TableConfig tableConfig1 = GenerateMapperFileCommand.TableConfig
+                .builder("t_actuarial_ignore_update_item")
+                .beanName("ActuarialIgnoreUpdateItem")
+                .remarks("忽略清单更新项")
+                .build();
 
-        List<TableConfig> tableConfigs = Collections.singletonList(tableConfig1);
-        GlobalConfig globalConfig = GlobalConfig.builder()
-                .configPath("generate.properties")
-                .databaseType(DatabaseType.MYSQL)
+        List<GenerateMapperFileCommand.TableConfig> tableConfigs = Collections.singletonList(tableConfig1);
+        GenerateMapperFileCommand command = GenerateMapperFileCommand.builder("generate.properties", DatabaseType.MYSQL, tableConfigs)
                 .author(AUTHOR)
                 .datePattern(FORMAT)
                 .isCover(true)
@@ -34,9 +35,9 @@ public class Generator {
                 .mapperModuleName("trainee-biz/trainee-test")
                 .beanMapperPackage("com.yuxing.trainee.test.infrastructure.dao.mapper")
                 .mapperPackage("com.yuxing.trainee.test.infrastructure.dao.xml")
-                .tableConfigs(tableConfigs).build();
+                .build();
 
-        new Generate(globalConfig).execute();
+        new Generate().execute(command);
 
     }
 

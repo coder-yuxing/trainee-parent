@@ -4,7 +4,6 @@ import com.yuxing.trainee.generator.infrastructure.util.StringUtils;
 import lombok.AllArgsConstructor;
 
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -69,6 +68,6 @@ public enum MySqlAndJavaDataTypeMappingTable implements DataTypeMapping {
         if (StringUtils.isEmpty(sqlType)) {
             return Optional.empty();
         }
-        return Arrays.stream(MySqlAndJavaDataTypeMappingTable.values()).filter(t -> t.sqlType.toLowerCase(Locale.ROOT).equals(sqlType.toLowerCase(Locale.ROOT))).findFirst();
+        return Arrays.stream(MySqlAndJavaDataTypeMappingTable.values()).filter(t -> t.sqlType.equalsIgnoreCase(sqlType)).findFirst();
     }
 }

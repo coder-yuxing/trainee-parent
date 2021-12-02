@@ -1,6 +1,8 @@
 package com.yuxing.trainee.generator.application;
 
 import com.yuxing.trainee.generator.application.assembler.FreemarkerOutPutMetaDataAssembler;
+import com.yuxing.trainee.generator.application.assembler.GlobalConfigAssembler;
+import com.yuxing.trainee.generator.application.command.GenerateMapperFileCommand;
 import com.yuxing.trainee.generator.domain.service.DataTypeMappingService;
 import com.yuxing.trainee.generator.domain.service.DataTypeMappingServiceFactory;
 import com.yuxing.trainee.generator.domain.service.GenerateTemplateMetaDataService;
@@ -20,10 +22,11 @@ import static com.yuxing.trainee.generator.infrastructure.util.LambdaExceptionUt
 @AllArgsConstructor
 public class Generate {
 
-    private final GlobalConfig config;
+    public void execute(GenerateMapperFileCommand command) throws Exception {
+        GlobalConfig config = GlobalConfigAssembler.INSTANCE.toConfig(command);
 
-    public void execute() throws Exception {
         JdbcUtils jdbcUtils = new JdbcUtils(config.getConfigPath());
+
         DataTypeMappingService dataTypeMappingService = DataTypeMappingServiceFactory.getDataTypeMappingService(config.getDatabaseType());
         GenerateTemplateMetaDataService generateTemplateMetaDataService = new GenerateTemplateMetaDataService(jdbcUtils, dataTypeMappingService);
         // 获取各数据表初始化模板数据

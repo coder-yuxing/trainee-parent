@@ -38,7 +38,7 @@ public class FreemarkerUtils {
         getConfiguration().setTemplateLoader(classTemplateLoader);
         Template template = getConfiguration().getTemplate(metaData.getTemplateName());
         String absolutePath = new File("").getAbsolutePath();
-        File file = FileUtils.create(absolutePath + metaData.getFileName());
+        File file = FileUtils.create(absolutePath + metaData.getFileName(), metaData.isCover());
         if (Objects.isNull(file)) {
             log.error("{} 文件创建失败, 写出程序结束。", metaData.getFileName());
             return;

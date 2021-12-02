@@ -17,7 +17,7 @@ import ${importQuote};
  * ${remarks}
  *
  * @author ${author}
- * @date ${date}
+ * @since ${date}
  */
 @Getter
 @Setter
