@@ -27,7 +27,7 @@ public class Generate {
 
         JdbcUtils jdbcUtils = new JdbcUtils(config.getConfigPath());
 
-        DataTypeMappingService dataTypeMappingService = DataTypeMappingServiceFactory.getDataTypeMappingService(config.getDatabaseType());
+        DataTypeMappingService dataTypeMappingService = DataTypeMappingServiceFactory.getInstance(config.getDatabaseType());
         GenerateTemplateMetaDataService generateTemplateMetaDataService = new GenerateTemplateMetaDataService(jdbcUtils, dataTypeMappingService);
         // 获取各数据表初始化模板数据
         List<GenerateTemplateMetadata> generateTemplateMetadata = generateTemplateMetaDataService.getGenerateTemplateMetadata(config);

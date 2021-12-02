@@ -33,8 +33,8 @@ public class Generator {
                 .beanModuleName("trainee-biz/trainee-test")
                 .beanPackage("com.yuxing.trainee.test.infrastructure.dao.model")
                 .mapperModuleName("trainee-biz/trainee-test")
-                .beanMapperPackage("com.yuxing.trainee.test.infrastructure.dao.mapper")
                 .mapperPackage("com.yuxing.trainee.test.infrastructure.dao.xml")
+                .beanMapperPackage("com.yuxing.trainee.test.infrastructure.dao.mapper")
                 .build();
 
         new Generate().execute(command);

@@ -222,7 +222,6 @@ public class GenerateMapperFileCommand {
          */
         private String remarks;
 
-        @Getter
         public static class TableConfigBuilder {
 
             public TableConfigBuilder(String tableName) {

@@ -1,5 +1,7 @@
 package com.yuxing.trainee.generator.infrastructure.util;
 
+import java.util.Locale;
+
 /**
  * 字符串处理工具类
  *
@@ -46,6 +48,18 @@ public class StringUtils {
     public static String toUpperCaseFirstLetter(String var) {
         char[] chars = var.toCharArray();
         chars[0] = Character.toUpperCase(chars[0]);
+        return new String(chars);
+    }
+
+    /**
+     * 字符串首字母小写
+     *
+     * @param var 字符串
+     * @return 首字母小写的字符串
+     */
+    public static String toLowerCaseFirstLetter(String var) {
+        char[] chars = var.toCharArray();
+        chars[0] = Character.toLowerCase(chars[0]);
         return new String(chars);
     }
 

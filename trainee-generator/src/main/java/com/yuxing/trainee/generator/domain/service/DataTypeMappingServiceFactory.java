@@ -10,7 +10,7 @@ import com.yuxing.trainee.generator.domain.valueobject.datatype.DatabaseType;
  */
 public abstract class DataTypeMappingServiceFactory {
 
-    public static DataTypeMappingService getDataTypeMappingService(DatabaseType databaseType) {
+    public static DataTypeMappingService getInstance(DatabaseType databaseType) {
         if (databaseType == DatabaseType.MYSQL) {
             return new MySqlDataTypeMappingServiceImpl();
         }

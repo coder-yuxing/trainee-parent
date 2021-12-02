@@ -12,8 +12,9 @@ public interface DataTypeMappingService {
     /**
      * 查询数据类型映射
      *
-     * @param sqlDataType sql数据类型
+     * @param columnName 列名
+     * @param dbDataType sql数据类型
      * @return DataTypeMapping
      */
-    DataTypeMapping getBySqlDataType(String sqlDataType);
+    DataTypeMapping getByDbDataType(String columnName, String dbDataType);
 }

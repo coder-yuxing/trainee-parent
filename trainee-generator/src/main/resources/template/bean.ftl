@@ -29,6 +29,7 @@ public class ${name} implements Serializable {
 <#-- 字段 -->
 <#if fields ?? && (fields ? size > 0)>
 <#list fields as field>
+
     /**
      * ${field.remarks}
      */

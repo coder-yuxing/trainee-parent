@@ -27,4 +27,11 @@ public interface DataTypeMapping {
      * @return 类名
      */
     String getClassName();
+
+    /**
+     * 是否为布尔类型
+     *
+     * @return booL
+     */
+    boolean isBoolType();
 }

@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class GenerateTemplateMetaDataService {
 
+    private static final String IS_PREFIX = "is";
+
     private static final String sql = "select column_name columnName, data_type dataType, column_comment columnComment, column_key columnKey, extra from information_schema.columns\n" +
             " \t\t\twhere table_name = \"{0}\" and table_schema = (select database()) order by ordinal_position";
 
@@ -70,8 +72,16 @@ public class GenerateTemplateMetaDataService {
                 String remarks = metaData.getString("columnComment");
                 String key = metaData.getString("columnKey");
                 columnMetaData.setColumnName(columnName);
-                columnMetaData.setFieldName(StringUtils.underline2Hump(columnName));
-                DataTypeMapping dataTypeMapping = dataTypeMappingService.getBySqlDataType(dbDataType);
+                String fieldName = StringUtils.underline2Hump(columnName);
+                DataTypeMapping dataTypeMapping = dataTypeMappingService.getByDbDataType(columnName, dbDataType);
+                // 若字段类型映射为bool类型, 且字段名前缀为 is, 则移除该前缀
+                if (dataTypeMapping.isBoolType() && columnName.startsWith(IS_PREFIX)) {
+                    String newFieldName = StringUtils.toLowerCaseFirstLetter(fieldName.replace(IS_PREFIX, ""));
+                    if (!StringUtils.isEmpty(newFieldName)) {
+                        fieldName = newFieldName;
+                    }
+                }
+                columnMetaData.setFieldName(fieldName);
                 columnMetaData.setDataTypeMapping(dataTypeMapping);
                 columnMetaData.setRemarks(remarks);
                 boolean isPrimaryKey = !StringUtils.isEmpty(key);
@@ -85,4 +95,5 @@ public class GenerateTemplateMetaDataService {
         }
         return Collections.emptyList();
     }
+
 }

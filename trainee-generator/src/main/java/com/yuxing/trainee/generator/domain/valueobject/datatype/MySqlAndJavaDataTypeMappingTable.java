@@ -4,7 +4,9 @@ import com.yuxing.trainee.generator.infrastructure.util.StringUtils;
 import lombok.AllArgsConstructor;
 
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * mysql 与 java 数据类型映射表
@@ -41,7 +43,7 @@ public enum MySqlAndJavaDataTypeMappingTable implements DataTypeMapping {
     ;
 
 
-    public final String sqlType;
+    public final String dbDataType;
 
     public final String javaType;
 
@@ -64,10 +66,15 @@ public enum MySqlAndJavaDataTypeMappingTable implements DataTypeMapping {
         return this.className;
     }
 
-    public static Optional<MySqlAndJavaDataTypeMappingTable> getBySqlType(String sqlType) {
-        if (StringUtils.isEmpty(sqlType)) {
-            return Optional.empty();
+    @Override
+    public boolean isBoolType() {
+        return "Boolean".equalsIgnoreCase(this.javaType);
+    }
+
+    public static List<MySqlAndJavaDataTypeMappingTable> listByDbDataType(String dbDataType) {
+        if (StringUtils.isEmpty(dbDataType)) {
+            return Collections.emptyList();
         }
-        return Arrays.stream(MySqlAndJavaDataTypeMappingTable.values()).filter(t -> t.sqlType.equalsIgnoreCase(sqlType)).findFirst();
+        return Arrays.stream(MySqlAndJavaDataTypeMappingTable.values()).filter(t -> t.dbDataType.equalsIgnoreCase(dbDataType)).collect(Collectors.toList());
     }
 }
