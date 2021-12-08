@@ -12,6 +12,7 @@
   <name>trainee-parent</name>
 
   <modules>
+    <module>trainee-common</module>
     <module>trainee-biz</module>
     <module>trainee-generator</module>
   </modules>
@@ -31,6 +32,9 @@
     <freemarker.version>2.3.29</freemarker.version>
     <lombok.version>1.18.12</lombok.version>
     <mapstruct.version>1.4.1.Final</mapstruct.version>
+    <hutool.version>5.7.16</hutool.version>
+    <jedis.version>3.6.1</jedis.version>
+    <zkclient.version>0.11</zkclient.version>
 
     <!-- 日志 -->
     <slf4j-api.version>1.7.7</slf4j-api.version>
@@ -81,6 +85,24 @@
         <groupId>org.freemarker</groupId>
         <artifactId>freemarker</artifactId>
         <version>${freemarker.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>cn.hutool</groupId>
+        <artifactId>hutool-all</artifactId>
+        <version>${hutool.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>redis.clients</groupId>
+        <artifactId>jedis</artifactId>
+        <version>${jedis.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.101tec</groupId>
+        <artifactId>zkclient</artifactId>
+        <version>${zkclient.version}</version>
       </dependency>
 
       <dependency>
@@ -137,6 +159,11 @@
   </dependencyManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>cn.hutool</groupId>
+      <artifactId>hutool-all</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
