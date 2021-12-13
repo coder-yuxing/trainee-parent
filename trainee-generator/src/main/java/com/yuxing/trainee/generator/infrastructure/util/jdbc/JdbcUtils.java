@@ -14,17 +14,7 @@ import java.util.function.Function;
 @Slf4j
 public class JdbcUtils {
 
-    private final JdbcProperties properties;
-
-    public JdbcUtils(String configPath) {
-        JdbcPropertiesHandler handler = new JdbcPropertiesHandler(configPath);
-
-        this.properties = handler.getJdbcProperties();
-        try {
-            Class.forName(properties.getDriverClassName());
-        } catch (Exception e) {
-            log.error("加载驱动 {} 异常, 请检查依赖", properties.getDriverClassName());
-        }
+    private JdbcUtils() {
     }
 
     /**
@@ -33,7 +23,12 @@ public class JdbcUtils {
      * @return 数据库连接
      * @throws SQLException exception
      */
-    public Connection getConnection() throws SQLException {
+    public static Connection getConnection(JdbcProperties properties) throws SQLException {
+        try {
+            Class.forName(properties.getDriverClassName());
+        } catch (Exception e) {
+            log.error("加载驱动 {} 异常: {}, 请检查依赖", properties.getDriverClassName(), e);
+        }
         return DriverManager.getConnection(properties.getUrl(), properties.getUsername(), properties.getPassword());
     }
 
@@ -45,9 +40,9 @@ public class JdbcUtils {
      * @param <R>             返回值类型
      * @return 查询结果集
      */
-    public <R> List<R> executeQuery(String sql, Function<ResultSet, List<R>> parseResultSet) {
+    public static <R> List<R> executeQuery(JdbcProperties properties, String sql, Function<ResultSet, List<R>> parseResultSet) {
         try (
-            Connection connection = this.getConnection();
+            Connection connection = getConnection(properties);
             PreparedStatement prepareStatement = connection.prepareStatement(sql);
             final ResultSet resultSet = prepareStatement.executeQuery()
         ) {
@@ -55,7 +50,7 @@ public class JdbcUtils {
                 return parseResultSet.apply(resultSet);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("执行SQL：{} 语句失败, {}", sql, e);
         }
         return null;
     }

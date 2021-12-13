@@ -6,6 +6,8 @@ import com.yuxing.trainee.generator.domain.valueobject.datatype.DataTypeMapping;
 import com.yuxing.trainee.generator.domain.valueobject.template.ColumnMetadata;
 import com.yuxing.trainee.generator.domain.valueobject.template.GenerateTemplateMetadata;
 import com.yuxing.trainee.generator.infrastructure.util.StringUtils;
+import com.yuxing.trainee.generator.infrastructure.util.jdbc.JdbcProperties;
+import com.yuxing.trainee.generator.infrastructure.util.jdbc.JdbcPropertiesHandler;
 import com.yuxing.trainee.generator.infrastructure.util.jdbc.JdbcUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +30,6 @@ public class GenerateTemplateMetaDataService {
     private static final String sql = "select column_name columnName, data_type dataType, column_comment columnComment, column_key columnKey, extra from information_schema.columns\n" +
             " \t\t\twhere table_name = \"{0}\" and table_schema = (select database()) order by ordinal_position";
 
-    private final JdbcUtils jdbcUtils;
     private final DataTypeMappingService dataTypeMappingService;
 
     public List<GenerateTemplateMetadata> getGenerateTemplateMetadata(GlobalConfig config) {
@@ -37,8 +38,10 @@ public class GenerateTemplateMetaDataService {
             return Collections.emptyList();
         }
 
+        JdbcProperties jdbcProperties = new JdbcPropertiesHandler(config.getConfigPath()).getJdbcProperties();
+
         return tableConfigs.stream().map(t -> {
-            List<ColumnMetadata> columns = this.listColumnMetadataByTableName(t.getTableName());
+            List<ColumnMetadata> columns = this.listColumnMetadataByTableName(jdbcProperties, t.getTableName());
             return new GenerateTemplateMetadata(config, t, columns);
         }).collect(Collectors.toList());
     }
@@ -46,10 +49,11 @@ public class GenerateTemplateMetaDataService {
     /**
      * 查询指定数据表列元数据集合
      *
-     * @param tableName 数据表名称
+     * @param jdbcProperties 数据源配置
+     * @param tableName      数据表名称
      * @return 表全部列元数据集合
      */
-    public List<ColumnMetadata> listColumnMetadataByTableName(String tableName) {
+    public List<ColumnMetadata> listColumnMetadataByTableName(JdbcProperties jdbcProperties, String tableName) {
         if (StringUtils.isEmpty(tableName)) {
             log.debug("表名为空, 无法获取元数据");
             return Collections.emptyList();
@@ -57,7 +61,7 @@ public class GenerateTemplateMetaDataService {
 
         Function<ResultSet, List<ColumnMetadata>> parseMetaData = this::parseMetaData;
         log.debug(">>> 开始查询数据表 {} 元数据: ", tableName);
-        List<ColumnMetadata> columnMetadata = jdbcUtils.executeQuery(MessageFormat.format(sql, tableName), parseMetaData);
+        List<ColumnMetadata> columnMetadata = JdbcUtils.executeQuery(jdbcProperties, MessageFormat.format(sql, tableName), parseMetaData);
         log.debug("查询数据表 {} 元数据结束 <<<", tableName);
         return columnMetadata;
     }

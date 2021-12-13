@@ -1,5 +1,6 @@
 package com.yuxing.trainee.generator.application.assembler;
 
+import cn.hutool.core.collection.CollUtil;
 import com.yuxing.trainee.generator.domain.valueobject.config.GlobalConfig;
 import com.yuxing.trainee.generator.domain.valueobject.template.BeanMapperTemplateData;
 import com.yuxing.trainee.generator.domain.valueobject.template.BeanTemplateData;
@@ -8,10 +9,19 @@ import com.yuxing.trainee.generator.domain.valueobject.template.MapperTemplateDa
 import com.yuxing.trainee.generator.infrastructure.util.freemarker.FreemarkerOutPutMetaData;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FreemarkerOutPutMetaDataAssembler {
 
+    public static List<FreemarkerOutPutMetaData> assemble2FreemarkerOutPutMetaData(GlobalConfig config, List<GenerateTemplateMetadata> generateTemplateMetadata) {
+        if (CollUtil.isEmpty(generateTemplateMetadata)) {
+            return Collections.emptyList();
+        }
+        return generateTemplateMetadata.stream().map(m -> assemble2FreemarkerOutPutMetaData(config, m)).flatMap(Collection::stream).collect(Collectors.toList());
+    }
     public static List<FreemarkerOutPutMetaData> assemble2FreemarkerOutPutMetaData(GlobalConfig config, GenerateTemplateMetadata generate) {
         ArrayList<FreemarkerOutPutMetaData> result = new ArrayList<>(3);
         result.add(assemble2FreemarkerOutPutMetaDataByBeanData(config, generate.getBean()));

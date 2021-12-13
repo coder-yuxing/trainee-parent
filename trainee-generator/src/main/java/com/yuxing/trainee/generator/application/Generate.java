@@ -10,12 +10,9 @@ import com.yuxing.trainee.generator.domain.valueobject.config.GlobalConfig;
 import com.yuxing.trainee.generator.domain.valueobject.template.GenerateTemplateMetadata;
 import com.yuxing.trainee.generator.infrastructure.util.freemarker.FreemarkerOutPutMetaData;
 import com.yuxing.trainee.generator.infrastructure.util.freemarker.FreemarkerUtils;
-import com.yuxing.trainee.generator.infrastructure.util.jdbc.JdbcUtils;
 import lombok.AllArgsConstructor;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.yuxing.trainee.generator.infrastructure.util.LambdaExceptionUtils.rethrowConsumer;
 
@@ -25,17 +22,12 @@ public class Generate {
     public void execute(GenerateMapperFileCommand command) throws Exception {
         GlobalConfig config = GlobalConfigAssembler.INSTANCE.toConfig(command);
 
-        JdbcUtils jdbcUtils = new JdbcUtils(config.getConfigPath());
-
         DataTypeMappingService dataTypeMappingService = DataTypeMappingServiceFactory.getInstance(config.getDatabaseType());
-        GenerateTemplateMetaDataService generateTemplateMetaDataService = new GenerateTemplateMetaDataService(jdbcUtils, dataTypeMappingService);
+        GenerateTemplateMetaDataService generateTemplateMetaDataService = new GenerateTemplateMetaDataService(dataTypeMappingService);
         // 获取各数据表初始化模板数据
         List<GenerateTemplateMetadata> generateTemplateMetadata = generateTemplateMetaDataService.getGenerateTemplateMetadata(config);
 
-        List<FreemarkerOutPutMetaData> collect = generateTemplateMetadata.stream()
-                .map(m -> FreemarkerOutPutMetaDataAssembler.assemble2FreemarkerOutPutMetaData(config, m))
-                .flatMap(Collection::stream).collect(Collectors.toList());
-
+        List<FreemarkerOutPutMetaData> collect = FreemarkerOutPutMetaDataAssembler.assemble2FreemarkerOutPutMetaData(config, generateTemplateMetadata);
         // 根据freemarker模板写出文件
         collect.forEach(rethrowConsumer(FreemarkerUtils::write));
     }
