@@ -1,7 +1,7 @@
-package com.yuxing.trainee.common.lock.zookeeper;
+package com.yuxing.trainee.common.core.lock.zookeeper;
 
 import cn.hutool.core.util.StrUtil;
-import com.yuxing.trainee.common.lock.DistributedLock;
+import com.yuxing.trainee.common.core.lock.DistributedLock;
 import lombok.extern.slf4j.Slf4j;
 import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.ZkClient;

@@ -1,13 +1,9 @@
-package com.yuxing.trainee.common.retelimit;
+package com.yuxing.trainee.common.core.retelimit;
 
 import cn.hutool.core.date.DateUtil;
 import org.junit.Test;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Date;
-
-import static org.junit.Assert.*;
 
 public class FixedWindowCounterLimitTest {
 

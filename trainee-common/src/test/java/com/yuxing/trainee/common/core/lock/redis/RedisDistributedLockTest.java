@@ -1,4 +1,4 @@
-package com.yuxing.trainee.common.lock.redis;
+package com.yuxing.trainee.common.core.lock.redis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -16,11 +16,11 @@ public class RedisDistributedLockTest {
     public void acquire() {
 
         Runnable runnable = () -> {
-            com.yuxing.trainee.common.lock.redis.RedisDistributedLock lock = null;
+            com.yuxing.trainee.common.core.lock.redis.RedisDistributedLock lock = null;
             String lockId = null;
             try (Jedis conn = new Jedis("127.0.0.1", 6379)) {
                 JedisClient jedisClient = new JedisClient(conn);
-                lock = new com.yuxing.trainee.common.lock.redis.RedisDistributedLock(jedisClient, "test1", 10);
+                lock = new com.yuxing.trainee.common.core.lock.redis.RedisDistributedLock(jedisClient, "test1", 10);
                 lockId = lock.acquire();
                 if (lockId != null) {
                     System.out.println(Thread.currentThread().getName() + "正在运行");
@@ -49,7 +49,7 @@ public class RedisDistributedLockTest {
     }
 
     @Slf4j
-    static class JedisClient implements com.yuxing.trainee.common.lock.redis.RedisClient {
+    static class JedisClient implements com.yuxing.trainee.common.core.lock.redis.RedisClient {
 
         private final Jedis jedis;
 

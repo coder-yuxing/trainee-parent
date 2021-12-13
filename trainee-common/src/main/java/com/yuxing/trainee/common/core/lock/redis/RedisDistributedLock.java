@@ -1,6 +1,6 @@
-package com.yuxing.trainee.common.lock.redis;
+package com.yuxing.trainee.common.core.lock.redis;
 
-import com.yuxing.trainee.common.lock.DistributedLock;
+import com.yuxing.trainee.common.core.lock.DistributedLock;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;

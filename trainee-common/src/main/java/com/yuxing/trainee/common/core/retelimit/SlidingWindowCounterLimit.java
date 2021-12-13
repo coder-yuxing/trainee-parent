@@ -1,4 +1,4 @@
-package com.yuxing.trainee.common.retelimit;
+package com.yuxing.trainee.common.core.retelimit;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,4 +1,4 @@
-package com.yuxing.trainee.common.lock;
+package com.yuxing.trainee.common.core.lock;
 
 /**
  * 分布式锁接口

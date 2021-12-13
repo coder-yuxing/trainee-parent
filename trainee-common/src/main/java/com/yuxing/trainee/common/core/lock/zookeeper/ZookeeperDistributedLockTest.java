@@ -1,7 +1,6 @@
-package com.yuxing.trainee.common.lock.zookeeper;
+package com.yuxing.trainee.common.core.lock.zookeeper;
 
 import org.I0Itec.zkclient.ZkClient;
-import org.apache.zookeeper.*;
 
 public class ZookeeperDistributedLockTest {
 

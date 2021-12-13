@@ -43,11 +43,14 @@ public class FreemarkerUtils {
             log.error("{} 文件创建失败, 写出程序结束。", metaData.getFileName());
             return;
         }
-        OutputStream fos = new FileOutputStream(file, metaData.isCover());
-        Writer out = new OutputStreamWriter(fos);
-        template.process(metaData.getData(), out);
-        out.flush();
-        out.close();
+        try (
+            OutputStream fos = new FileOutputStream(file, metaData.isCover());
+            Writer out = new OutputStreamWriter(fos)
+        ) {
+            template.process(metaData.getData(), out);
+        } catch (Exception e) {
+            log.error("写出模板文件失败, ", e);
+        }
     }
 
 

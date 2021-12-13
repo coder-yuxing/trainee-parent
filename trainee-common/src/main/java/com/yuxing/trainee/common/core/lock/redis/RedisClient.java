@@ -1,4 +1,4 @@
-package com.yuxing.trainee.common.lock.redis;
+package com.yuxing.trainee.common.core.lock.redis;
 
 import java.util.List;
 
