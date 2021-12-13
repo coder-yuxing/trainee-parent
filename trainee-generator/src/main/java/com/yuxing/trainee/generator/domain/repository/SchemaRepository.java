@@ -1,10 +1,9 @@
 package com.yuxing.trainee.generator.domain.repository;
 
-import com.yuxing.trainee.generator.domain.service.DataTypeMappingService;
-import com.yuxing.trainee.generator.domain.service.DataTypeMappingServiceFactory;
 import com.yuxing.trainee.generator.domain.valueobject.datatype.DataTypeMapping;
 import com.yuxing.trainee.generator.domain.valueobject.datatype.DatabaseType;
 import com.yuxing.trainee.generator.domain.valueobject.template.ColumnMetadata;
+import com.yuxing.trainee.generator.infrastructure.repository.DataTypeMappingRepositoryFactory;
 import com.yuxing.trainee.generator.infrastructure.util.StringUtils;
 import com.yuxing.trainee.generator.infrastructure.util.jdbc.JdbcProperties;
 import com.yuxing.trainee.generator.infrastructure.util.jdbc.JdbcPropertiesHandler;
@@ -36,11 +35,11 @@ public class SchemaRepository {
      * 数据源配置
      */
     private final JdbcProperties jdbcProperties;
-    private final DataTypeMappingService dataTypeMappingService;
+    private final DataTypeMappingRepository dataTypeMappingService;
 
     public SchemaRepository(String configPath, DatabaseType databaseType) {
         this.jdbcProperties = new JdbcPropertiesHandler(configPath).getJdbcProperties();
-        this.dataTypeMappingService = DataTypeMappingServiceFactory.getInstance(databaseType);
+        this.dataTypeMappingService = DataTypeMappingRepositoryFactory.getInstance(databaseType);
     }
 
     /**

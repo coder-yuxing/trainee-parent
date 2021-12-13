@@ -1,4 +1,4 @@
-package com.yuxing.trainee.generator.domain.service;
+package com.yuxing.trainee.generator.domain.repository;
 
 import com.yuxing.trainee.generator.domain.valueobject.datatype.DataTypeMapping;
 
@@ -7,7 +7,7 @@ import com.yuxing.trainee.generator.domain.valueobject.datatype.DataTypeMapping;
  *
  * @author yuxing
  */
-public interface DataTypeMappingService {
+public interface DataTypeMappingRepository {
 
     /**
      * 查询数据类型映射

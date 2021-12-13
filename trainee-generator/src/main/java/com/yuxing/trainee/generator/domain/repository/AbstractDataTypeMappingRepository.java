@@ -1,4 +1,4 @@
-package com.yuxing.trainee.generator.domain.service;
+package com.yuxing.trainee.generator.domain.repository;
 
 import com.yuxing.trainee.generator.domain.valueobject.datatype.DataTypeMapping;
 import lombok.extern.slf4j.Slf4j;
@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.*;
 
 @Slf4j
-public abstract class AbstractDataTypeMappingService implements DataTypeMappingService {
+public abstract class AbstractDataTypeMappingRepository implements DataTypeMappingRepository {
 
     /**
      * bool 类型命名字段前缀集合

@@ -1,5 +1,6 @@
-package com.yuxing.trainee.generator.domain.valueobject.datatype;
+package com.yuxing.trainee.generator.infrastructure.model;
 
+import com.yuxing.trainee.generator.domain.valueobject.datatype.DataTypeMapping;
 import com.yuxing.trainee.generator.infrastructure.util.StringUtils;
 import lombok.AllArgsConstructor;
 

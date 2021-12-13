@@ -1,8 +1,8 @@
-package com.yuxing.trainee.generator.domain.service.impl;
+package com.yuxing.trainee.generator.infrastructure.repository;
 
-import com.yuxing.trainee.generator.domain.service.AbstractDataTypeMappingService;
+import com.yuxing.trainee.generator.domain.repository.AbstractDataTypeMappingRepository;
 import com.yuxing.trainee.generator.domain.valueobject.datatype.DataTypeMapping;
-import com.yuxing.trainee.generator.domain.valueobject.datatype.MySqlAndJavaDataTypeMappingTable;
+import com.yuxing.trainee.generator.infrastructure.model.MySqlAndJavaDataTypeMappingTable;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * @author yuxing
  */
 @Slf4j
-public class MySqlDataTypeMappingServiceImpl extends AbstractDataTypeMappingService {
+public class MySqlDataTypeMappingServiceImpl extends AbstractDataTypeMappingRepository {
 
     @Override
     public DataTypeMapping getByDbDataType(String columnName, String dbDataType) {
