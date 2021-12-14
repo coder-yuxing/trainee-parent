@@ -21,16 +21,16 @@ public class FixedWindowCounterLimit {
         this(limitCount, periodForSecond, TimeUnit.SECONDS);
     }
 
-    public FixedWindowCounterLimit(int limitCount, long period, TimeUnit timeUnit) {
+    public FixedWindowCounterLimit(int limitCount, long windowSize, TimeUnit timeUnit) {
         this.limitCount = limitCount;
         this.counter = new AtomicInteger(0);
         this.timeUnit = timeUnit;
-        this.period = timeUnit.toSeconds(period);
+        this.windowSize = timeUnit.toSeconds(windowSize);
         new Thread(new CounterResetThread()).start();
     }
 
     /**
-     * 时间窗口
+     * 限流计数器
      */
     private final AtomicInteger counter;
 
@@ -40,9 +40,9 @@ public class FixedWindowCounterLimit {
     private final int limitCount;
 
     /**
-     * 单位时间的周期长度
+     * 限流器时间窗口大小：e.g. 每分钟、每秒等
      */
-    private final long period;
+    private final long windowSize;
 
     /**
      * 周期时长单位
@@ -91,9 +91,9 @@ public class FixedWindowCounterLimit {
         public void run() {
             while (true) {
                 try {
-                    timeUnit.sleep(period);
+                    timeUnit.sleep(windowSize);
                     // 计数器清零
-                    counter.compareAndSet(counter.get(), 0);
+                    counter.set(0);
                     limited = false;
                     log.debug("当前限流计数周期已结束，重置计数器");
                 } catch (InterruptedException e) {

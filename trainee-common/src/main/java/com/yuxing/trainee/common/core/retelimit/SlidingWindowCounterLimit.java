@@ -2,10 +2,9 @@ package com.yuxing.trainee.common.core.retelimit;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
 
 /**
  * 滑动窗口计数限流
@@ -15,47 +14,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class SlidingWindowCounterLimit {
 
-    public SlidingWindowCounterLimit(int limitCount, long period, int periodPartitionNumber) {
-        this(limitCount, period, TimeUnit.SECONDS, periodPartitionNumber);
-    }
-
-    public SlidingWindowCounterLimit(int limitCount, long period, TimeUnit timeUnit, int periodPartitionNumber) {
-        this.limitCount = limitCount;
-        this.partitionLimit = this.limitCount / periodPartitionNumber;
-        this.timeUnit = timeUnit;
-        this.period = timeUnit.toSeconds(period);
-        this.periodPartitionNumber = periodPartitionNumber;
-        this.perPartitionTime = this.period / this.periodPartitionNumber;
-        this.byStages = new AtomicInteger[this.periodPartitionNumber];
-        for (int i = 0; i < this.periodPartitionNumber; i++) {
-            this.byStages[i] = new AtomicInteger(0);
-        }
-        this.startTime = LocalDateTime.now();
-        this.currentIndex = this.getCurrentIndex();
-        this.totalAccess = new AtomicInteger(0);
-        new Thread(new CounterResetThread()).start();
-    }
-
+    private final Object lock = new Object();
 
     /**
-     * 限制单位时间内的访问次数
+     * 限流器时间窗口大小：e.g. 每分钟、每秒等
      */
-    private final int limitCount;
-
-    /**
-     * 分区限制请求数
-     */
-    private final int partitionLimit;
-
-    /**
-     * 单位时间的周期长度
-     */
-    private final long period;
-
-    /**
-     * 单位时间的分区数
-     */
-    private final int periodPartitionNumber;
+    private final long windowSize;
 
     /**
      * 周期时长单位
@@ -63,98 +27,153 @@ public class SlidingWindowCounterLimit {
     private final TimeUnit timeUnit;
 
     /**
-     * 分期
+     * 单位时间内的限制访问次数
      */
-    private final AtomicInteger[] byStages;
+    private final int limitCount;
 
     /**
-     * 开始时间
+     * 当前计数窗格
      */
-    private final LocalDateTime startTime;
+    private volatile PaneNode writePos;
 
-    /**
-     * 每个区间的时间周期
-     */
-    private final long perPartitionTime;
+    public SlidingWindowCounterLimit(long windowSize, TimeUnit timeUnit, int limitCount, int gridSize) {
+        this.timeUnit = timeUnit;
+        this.windowSize = this.timeUnit.toSeconds(windowSize);
+        this.limitCount = limitCount;
+        long startTime = System.currentTimeMillis();
+        int threshold = limitCount / gridSize;
+        int period = (int) windowSize / gridSize;
+        PaneNode checkpoint = this.writePos = new PaneNode(0, threshold, startTime);
+        PaneNode head = null;
+        PaneNode tail = null;
+        for (long i = 0, time = startTime + period; i < gridSize - 1; i++, time += period) {
+            PaneNode node = new PaneNode(((int) i) + 1, threshold, time);
+            if (head == null) {
+                head = node;
+                tail = node;
+                continue;
+            }
+            PaneNode temp = tail;
+            tail = node;
+            temp.next = tail;
+        }
+        if  (head != null) {
+            checkpoint.next = head;
+            tail.next = checkpoint;
+        }
 
-    /**
-     * 当前分区索引
-     */
-    private volatile int currentIndex;
+        new Thread(new CounterResetThread(threshold)).start();
+    }
 
-    /**
-     * 总访问量
-     */
-    private final AtomicInteger totalAccess;
+    public SlidingWindowCounterLimit(long windowSize, int limitCount, int gridSize) {
+        this(windowSize, TimeUnit.SECONDS, limitCount, gridSize);
+    }
 
     public boolean acquire() {
-        // 总访问数已达到阈值，则进行限流
-        int currentAccess = this.getTotalAccessCount();
-        if (this.limitCount == currentAccess) {
-            return false;
-        }
-        AtomicInteger byStage = this.byStages[this.currentIndex];
-        int currentStageAccess = byStage.get();
-        // 当前分区访问数已到达分区阈值，则进行限流
-        if (this.partitionLimit == currentStageAccess) {
+        // 当前已到达限流阈值，则直接返回false
+        if (this.writePos.limited) {
+            log.debug("第 {} 窗格，当前访问计数：{}，累计访问：{}, 单位时间内，累加访问次数已达到阈值，限流", this.writePos.index, this.writePos.counter.get(), this.getTotalCounter());
             return false;
         }
 
-        byStage.incrementAndGet();
+        int currentLimit = this.writePos.counter.get();
+        if (this.writePos.threshold == (currentLimit + 1)) {
+            synchronized (this) {
+                if (this.limitCount > currentLimit) {
+                    this.writePos.counter.incrementAndGet();
+                }
+
+                this.writePos.limited = true;
+            }
+        } else {
+            this.writePos.counter.incrementAndGet();
+        }
+        log.debug("第{}窗格，限制访问次数: {}, 当前访问计数：{}", this.writePos.index, this.writePos.threshold, this.writePos.counter.get());
         return true;
     }
 
-    /**
-     * 获取当前分区索引
-     *
-     * @return 当前分区索引
-     */
-    private int getCurrentIndex() {
-        LocalDateTime nowTime = LocalDateTime.now();
-        long subtraction = this.getTimeSubtraction(nowTime);
-
-        return (int) ((subtraction % this.period) / this.perPartitionTime);
-    }
-
-    private long getTimeSubtraction(LocalDateTime nowTime) {
-        long subtractionMillis = Duration.between(startTime, nowTime).toMillis();
-        return TimeUnit.MILLISECONDS.toSeconds(subtractionMillis);
+    public int getTotalCounter() {
+        PaneNode temp = this.writePos;
+        int count = 0;
+        do {
+            count += temp.counter.get();
+        }
+        while ((temp = temp.next) != this.writePos);
+        return count;
     }
 
     /**
-     * 获取总访问量
-     * @return 总访问量
+     * 窗格
      */
-    private int getTotalAccessCount() {
-        return this.totalAccess.get() + byStages[currentIndex].get();
+    static class PaneNode {
+
+        /**
+         * 窗格索引
+         */
+        private final int index;
+
+        /**
+         * 单个窗格阈值
+         */
+        private final int threshold;
+
+        /**
+         * 起始时间
+         */
+        private long startTime;
+
+        /**
+         * 计数器
+         */
+        private final AtomicInteger counter;
+
+        /**
+         * 是否已达到限流阈值
+         */
+        private volatile boolean limited;
+
+        /**
+         * 下个节点
+         */
+        private PaneNode next;
+
+        public PaneNode(int index, int threshold, long startTime) {
+            this.index = index;
+            this.threshold = threshold;
+            this.startTime = startTime;
+            this.counter = new AtomicInteger(0);
+        }
     }
 
+    /**
+     * 重置计数器线程
+     */
     class CounterResetThread implements Runnable {
+
+        private final long period;
+
+        public CounterResetThread(long period) {
+            this.period = period;
+        }
 
         @Override
         @SuppressWarnings("InfiniteLoopStatement")
         public void run() {
             while (true) {
                 try {
-                    // 睡眠1毫秒
-                    timeUnit.sleep(1);
-                    int newCurrentIndex = getCurrentIndex();
-                    if (newCurrentIndex == currentIndex) {
-                        continue;
+                    timeUnit.sleep(this.period);
+                    synchronized (lock) {
+                        long currentTime = System.currentTimeMillis();
+                        PaneNode nextPaneNode = writePos.next;
+                        long startTime = nextPaneNode.startTime;
+                        if (currentTime - startTime >= windowSize) {
+                            nextPaneNode.startTime = currentTime;
+                            nextPaneNode.counter.set(0);
+                            nextPaneNode.limited = false;
+                            log.debug("重置计数窗格：{}", nextPaneNode.index);
+                        }
+                        writePos = writePos.next;
                     }
-                    int index2Reset = currentIndex - 1;
-                    if (index2Reset >= 0) {
-                        AtomicInteger resetStage = byStages[index2Reset];
-                        totalAccess.addAndGet(resetStage.get());
-                        log.info("当前分区：{}, 访问量：{}, 重置分区：{}, 访问量：{}, 总访问量：{}", currentIndex, byStages[currentIndex].get(), index2Reset, resetStage.get(), getTotalAccessCount());
-                        resetStage.set(0);
-                    }
-
-                    // 若当前周期已结束则重置全部计数器
-                    if (currentIndex == periodPartitionNumber) {
-                        totalAccess.set(0);
-                    }
-                    currentIndex = newCurrentIndex;
                 } catch (InterruptedException e) {
                     log.error("重置SlidingWindowCounterLimit计数器失败", e);
                 }
