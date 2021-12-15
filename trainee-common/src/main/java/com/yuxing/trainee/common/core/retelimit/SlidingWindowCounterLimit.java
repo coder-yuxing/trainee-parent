@@ -88,7 +88,7 @@ public class SlidingWindowCounterLimit {
         } else {
             this.writePos.counter.incrementAndGet();
         }
-        log.debug("第{}窗格，限制访问次数: {}, 当前访问计数：{}", this.writePos.index, this.writePos.threshold, this.writePos.counter.get());
+        log.debug("第{}窗格，限制访问次数: {}, 当前访问计数：{}，时间周期内累计访问次数：{}", this.writePos.index, this.writePos.threshold, this.writePos.counter.get(), this.getTotalCounter());
         return true;
     }
 
