@@ -3,6 +3,7 @@ package com.yuxing.trainee.common.concurrent;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.LongAdder;
 
@@ -49,5 +50,39 @@ public class VolatileTest {
         Assert.assertNotEquals(0, count);
         Assert.assertEquals(0, atomicCount.get());
         Assert.assertEquals(0, atomicCount1.sum());
+    }
+
+    private volatile boolean finished = false;
+
+    private void finished() {
+        this.finished = true;
+    }
+
+    /**
+     * volatile关键字可见性测试
+     */
+    @Test
+    public void visibilityTest() throws Exception {
+        AtomicInteger i = new AtomicInteger(0);
+        new Thread(() -> {
+            do {
+                i.incrementAndGet();
+                System.err.println("努力工作！");
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            while (!finished);
+        }).start();
+
+
+        TimeUnit.SECONDS.sleep(10);
+
+        this.finished();
+
+        Assert.assertEquals(10, i.get());
+
     }
 }
