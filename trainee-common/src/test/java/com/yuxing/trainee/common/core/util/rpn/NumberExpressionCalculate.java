@@ -16,6 +16,27 @@ public class NumberExpressionCalculate extends ExpressionCalculate<BigDecimal> {
 
     @Override
     protected BigDecimal doCalculate(Element elt1, Element elt2, Operator operator) {
+        if (Element.Type.EMPTY == elt1.getType() || Element.Type.EMPTY == elt2.getType()) {
+            throw new IllegalArgumentException("参数错误");
+        }
+        if (Element.Type.OPERATOR == elt1.getType() || Element.Type.OPERATOR == elt2.getType()) {
+            throw new IllegalArgumentException("参数错误");
+        }
+
+        if (Element.Type.VARIABLE == elt1.getType()) {
+            String v1 = ((Variable) elt1.getValue()).getValue().toString();
+            if (Element.Type.VARIABLE == elt2.getType()) {
+                String v2 = ((Variable) elt2.getValue()).getValue().toString();
+                return (BigDecimal) operator.execute(new BigDecimal(v1), new BigDecimal(v2));
+            }
+            return (BigDecimal) operator.execute(new BigDecimal(v1), new BigDecimal(elt2.getValue().toString()));
+        }
+
+        if (Element.Type.VARIABLE == elt2.getType()) {
+            String v2 = ((Variable) elt2.getValue()).getValue().toString();
+            return (BigDecimal) operator.execute(new BigDecimal(elt1.getValue().toString()), new BigDecimal(v2));
+        }
+
         return (BigDecimal) operator.execute(new BigDecimal(elt1.getValue().toString()), new BigDecimal(elt2.getValue().toString()));
     }
 

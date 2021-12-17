@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * String 工具类
  *
- * @author ding
+ * @author yuxing
  * @since 2019-03-12
  */
 public class StringUtils {
@@ -130,9 +130,6 @@ public class StringUtils {
 
         Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
         Matcher m = p.matcher(str);
-        if (m.find()) {
-            return true;
-        }
-        return false;
+        return m.find();
     }
 }

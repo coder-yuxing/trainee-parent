@@ -10,7 +10,7 @@ import java.util.Deque;
 /**
  * 中缀表达式转逆波兰表达式
  *
- * @author dingguangren
+ * @author yuxing
  */
 @Slf4j
 public class RpnUtils {
@@ -40,7 +40,7 @@ public class RpnUtils {
      */
     public static <L, M, R extends Operator<L, M>> Deque<Element> parse(String formula, OperatorSet<L, M, R> operatorSet) {
         if (StrUtil.isBlank(formula)) {
-            return null;
+            return new ArrayDeque<>();
         }
         String expression = StrUtil.trimEnd(StrUtil.trimStart(formula));
         // 操作符栈

@@ -30,11 +30,10 @@ import java.util.function.BiFunction;
  * @author yuxing
  */
 @Slf4j
-@SuppressWarnings("unchecked")
 @AllArgsConstructor
 public abstract class ExpressionCalculate<R> {
 
-    private final OperatorSet operatorSet;
+    private final OperatorSet<?, ?, ?> operatorSet;
 
     /**
      * 执行表达式
@@ -45,41 +44,35 @@ public abstract class ExpressionCalculate<R> {
      * @return 若计算成功则返回执行结果，否则返回null, 表示计算失败
      */
     public <T extends CalculationParameter> R calculate(String expression, T parameter, BiFunction<T, String, Variable> getVariableValue) {
-        if (StrUtil.isBlank(expression) || Objects.isNull(parameter) || Objects.isNull(getVariableValue)) {
+        if (StrUtil.isBlank(expression)) {
+            log.debug("表达式为空，计算失败");
             return null;
         }
+
+        if (Objects.isNull(parameter)) {
+            log.debug("计算表达式所需参数为空，计算失败");
+            return null;
+        }
+
+        if (Objects.isNull(getVariableValue)) {
+            log.debug("获取表达式变量方法为空，计算失败");
+            return null;
+        }
+
         Deque<Element> formula = RpnUtils.parse(expression, this.operatorSet);
-        if (Objects.isNull(formula)) {
+        if (CollUtil.isEmpty(formula)) {
+            log.debug("公式【{}】解析异常", expression);
             return null;
         }
+
         log.debug("解析并计算公式:【{}】", expression);
         Deque<Element> valueStack = new LinkedList<>();
         for (Element element : formula) {
             // 若不为操作符，则跳过
-            if (Element.Type.OPERATOR != element.getType()) {
-                // 若为变量则从参数对象中获取实际值，若为数值直接入栈
-                if (Element.Type.VARIABLE == element.getType()) {
-                    Variable variable = getVariableValue.apply(parameter, (String) element.getValue());
-                    if (Objects.isNull(variable) || Objects.isNull(variable.getValue())) {
-                        valueStack.push(new Element(null, Element.Type.EMPTY));
-                    } else {
-                        valueStack.push(new Element(variable, Element.Type.VARIABLE));
-                    }
-                } else {
-                    valueStack.push(element);
-                }
-            } else {
-                // 若为操作符，则获取前两位元素并按操作符计算
-                Operator operator = this.operatorSet.getOperator((String) element.getValue());
-                if (Objects.isNull(operator)) {
-                    log.debug("公式【{}】存在非法操作符：{}", expression, element.getValue());
-                    return null;
-                }
-                Element elt2 = valueStack.pop();
-                Element elt1 = valueStack.pop();
-                R result = this.doCalculate(elt1, elt2, operator);
-                log.debug("执行：{} {} {}, 结果: {}", elt1.getValue(), operator.getCode(), elt2.getValue(), result);
-                valueStack.push(new Element(result, Element.Type.CONSTANT));
+            this.attemptGetValueIfNotOperator(element, parameter, getVariableValue, valueStack);
+            // 若两个值计算失败则终止计算返回空
+            if (!this.calculateWithTwoElement(expression, element, valueStack)) {
+                return null;
             }
         }
 
@@ -98,6 +91,43 @@ public abstract class ExpressionCalculate<R> {
         return result;
     }
 
+    private <T extends CalculationParameter> void attemptGetValueIfNotOperator(Element element, T parameter, BiFunction<T, String, Variable> getVariableValue, Deque<Element> valueStack) {
+        if (Element.Type.OPERATOR == element.getType()) {
+            return;
+        }
+
+        // 若为变量则从参数对象中获取实际值，若为数值直接入栈
+        if (Element.Type.VARIABLE == element.getType()) {
+            Variable variable = getVariableValue.apply(parameter, (String) element.getValue());
+            if (Objects.isNull(variable) || Objects.isNull(variable.getValue())) {
+                valueStack.push(new Element(null, Element.Type.EMPTY));
+            } else {
+                valueStack.push(new Element(variable, Element.Type.VARIABLE));
+            }
+        } else {
+            valueStack.push(element);
+        }
+    }
+
+    private boolean calculateWithTwoElement(String expression, Element operateElement, Deque<Element> valueStack) {
+        if (Element.Type.OPERATOR != operateElement.getType()) {
+            // 若为操作符，则无需计算，直接返回true
+            return true;
+        }
+        // 若为操作符，则获取前两位元素并按操作符计算
+        Operator<?, ?> operator = this.operatorSet.getOperator((String) operateElement.getValue());
+        if (Objects.isNull(operator)) {
+            log.debug("公式【{}】存在非法操作符：{}", expression, operateElement.getValue());
+            return false;
+        }
+        Element elt2 = valueStack.pop();
+        Element elt1 = valueStack.pop();
+        R result = this.doCalculate(elt1, elt2, operator);
+        log.debug("执行：{} {} {}, 结果: {}", elt1.getValue(), operator.getCode(), elt2.getValue(), result);
+        valueStack.push(new Element(result, Element.Type.CONSTANT));
+        return true;
+    }
+
     /**
      * 执行计算
      *
@@ -106,7 +136,7 @@ public abstract class ExpressionCalculate<R> {
      * @param operator 计算方式
      * @return 计算结果
      */
-    protected abstract R doCalculate(Element elt1, Element elt2, Operator operator);
+    protected abstract R doCalculate(Element elt1, Element elt2, Operator<?, ?> operator);
 
     /**
      * 数据类型转换

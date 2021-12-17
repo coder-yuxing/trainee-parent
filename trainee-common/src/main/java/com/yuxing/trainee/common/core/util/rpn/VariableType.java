@@ -1,7 +1,5 @@
 package com.yuxing.trainee.common.core.util.rpn;
 
-import java.util.Optional;
-
 /**
  * 变量类型
  *
