@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * 算量参数
  *
- * @author dingguangren
+ * @author yuxing
  */
 @Slf4j
 public abstract class CalculationParameter implements Serializable {

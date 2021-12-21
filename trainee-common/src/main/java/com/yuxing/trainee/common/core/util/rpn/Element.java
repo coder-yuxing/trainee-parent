@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 /**
  * 公式解析后元素
  *
- * @author dingguangren
+ * @author yuxing
  */
 @Data
 @NoArgsConstructor

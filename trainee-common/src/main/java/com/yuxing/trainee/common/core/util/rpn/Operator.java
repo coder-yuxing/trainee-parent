@@ -3,7 +3,7 @@ package com.yuxing.trainee.common.core.util.rpn;
 /**
  * 操作符
  *
- * @author dingguangren
+ * @author yuxing
  */
 public interface Operator<T, R> {
 
