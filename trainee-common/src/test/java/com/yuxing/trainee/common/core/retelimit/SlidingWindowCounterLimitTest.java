@@ -7,7 +7,7 @@ public class SlidingWindowCounterLimitTest {
     @Test
     public void acquire() throws Exception {
         // 30s内限制最大60次访问
-        SlidingWindowCounterLimit counterLimit = new SlidingWindowCounterLimit(10, 20, 5);
+        SlidingWindowRateLimiter counterLimit = new SlidingWindowRateLimiter(10, 20, 5);
 
         for (int i = 0; i < 1000; i++) {
             if (i % 15 == 0) {
@@ -21,11 +21,11 @@ public class SlidingWindowCounterLimitTest {
 
     static class TestThread implements Runnable {
 
-        public TestThread(SlidingWindowCounterLimit counterLimit) {
+        public TestThread(SlidingWindowRateLimiter counterLimit) {
             this.counterLimit = counterLimit;
         }
 
-        private final SlidingWindowCounterLimit counterLimit;
+        private final SlidingWindowRateLimiter counterLimit;
 
         @Override
         public void run() {

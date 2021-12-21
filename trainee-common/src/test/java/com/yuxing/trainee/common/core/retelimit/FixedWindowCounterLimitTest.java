@@ -10,7 +10,7 @@ public class FixedWindowCounterLimitTest {
     @Test
     public void acquire() throws Exception {
         // 1s内限制最大10次访问
-        FixedWindowCounterLimit counterLimit = new FixedWindowCounterLimit(10, 1);
+        FixedWindowRateLimiter counterLimit = new FixedWindowRateLimiter(10, 1);
 
         for (int i = 0; i < 30; i++) {
 
@@ -25,13 +25,13 @@ public class FixedWindowCounterLimitTest {
 
     static class TestThread implements Runnable {
 
-        public TestThread(FixedWindowCounterLimit counterLimit,int serialNumber, Date accessTime) {
+        public TestThread(FixedWindowRateLimiter counterLimit, int serialNumber, Date accessTime) {
             this.counterLimit = counterLimit;
             this.serialNumber = serialNumber;
             this.accessTime = accessTime;
         }
 
-        private final FixedWindowCounterLimit counterLimit;
+        private final FixedWindowRateLimiter counterLimit;
 
         /**
          * 访问序号

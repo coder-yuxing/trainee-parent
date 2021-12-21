@@ -1,20 +1,23 @@
-import org.junit.jupiter.api.Test;
+package com.yuxing.trainee.common.core.retelimit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Test;
 
-class LeakyBucketTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+
+public class LeakyBucketTest {
 
     @Test
-    void basicTest() {
-        var bucket = LeakyBucket.monitor(System.out::println);
+    public void basicTest() {
+        LeakyBucket bucket = LeakyBucket.monitor(System.out::println);
 
         bucket.invoke("Hello world");
     }
 
     @Test
-    void failsAreIncreasedOnError() {
-        var bucket = LeakyBucket.monitor(__ -> { throw new RuntimeException(""); });
+    public void failsAreIncreasedOnError() {
+        LeakyBucket bucket = LeakyBucket.monitor(__ -> { throw new RuntimeException(""); });
 
         try {
             bucket.invoke("");
@@ -24,8 +27,8 @@ class LeakyBucketTest {
     }
 
     @Test
-    void failsAreDecreasedPeriodically() throws InterruptedException {
-        var bucket = LeakyBucket.monitor(__ -> { throw new RuntimeException(""); });
+    public void failsAreDecreasedPeriodically() throws InterruptedException {
+        LeakyBucket bucket = LeakyBucket.monitor(__ -> { throw new RuntimeException(""); });
 
         try {
             bucket.invoke("");
@@ -37,8 +40,8 @@ class LeakyBucketTest {
     }
 
     @Test
-    void tooHighErrorRateCausesBucketToOverflow() {
-        var bucket = LeakyBucket.monitor(__ -> { throw new RuntimeException(""); }, 10);
+    public void tooHighErrorRateCausesBucketToOverflow() {
+        LeakyBucket bucket = LeakyBucket.monitor(__ -> { throw new RuntimeException(""); }, 10);
         boolean thrown = false;
 
         for (int i = 0; i <= 10; ++i) {

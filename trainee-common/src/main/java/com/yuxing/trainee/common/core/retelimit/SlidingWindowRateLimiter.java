@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author yuxing
  */
 @Slf4j
-public class SlidingWindowCounterLimit {
+public class SlidingWindowRateLimiter {
 
     private final Object lock = new Object();
 
@@ -36,7 +36,7 @@ public class SlidingWindowCounterLimit {
      */
     private volatile PaneNode writePos;
 
-    public SlidingWindowCounterLimit(long windowSize, TimeUnit timeUnit, int limitCount, int gridSize) {
+    public SlidingWindowRateLimiter(long windowSize, TimeUnit timeUnit, int limitCount, int gridSize) {
         this.timeUnit = timeUnit;
         this.windowSize = this.timeUnit.toSeconds(windowSize);
         this.limitCount = limitCount;
@@ -65,7 +65,7 @@ public class SlidingWindowCounterLimit {
         new Thread(new CounterResetThread(threshold)).start();
     }
 
-    public SlidingWindowCounterLimit(long windowSize, int limitCount, int gridSize) {
+    public SlidingWindowRateLimiter(long windowSize, int limitCount, int gridSize) {
         this(windowSize, TimeUnit.SECONDS, limitCount, gridSize);
     }
 

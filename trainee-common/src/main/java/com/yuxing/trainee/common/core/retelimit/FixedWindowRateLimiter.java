@@ -15,13 +15,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author yuxing
  */
 @Slf4j
-public class FixedWindowCounterLimit {
+public class FixedWindowRateLimiter {
 
-    public FixedWindowCounterLimit(int limitCount, long periodForSecond) {
+    public FixedWindowRateLimiter(int limitCount, long periodForSecond) {
         this(limitCount, periodForSecond, TimeUnit.SECONDS);
     }
 
-    public FixedWindowCounterLimit(int limitCount, long windowSize, TimeUnit timeUnit) {
+    public FixedWindowRateLimiter(int limitCount, long windowSize, TimeUnit timeUnit) {
         this.limitCount = limitCount;
         this.counter = new AtomicInteger(0);
         this.timeUnit = timeUnit;
