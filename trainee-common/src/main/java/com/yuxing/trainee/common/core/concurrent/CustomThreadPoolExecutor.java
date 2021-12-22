@@ -21,7 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *  {@link CustomThreadPoolExecutor#taskQueue} 当核心线程已全部创建，仍无法及时处理用户提交的任务，需将其临时存放至任务队列，以便后续线程空闲时处理
  *  {@link CustomThreadPoolExecutor#maxPoolSize} 当任务队列空间耗尽，仍存在用户提交的任务无法处理时，线程池需提供一定的弹性空间允许在大量任务积压时，增加线程数量来处理任务，但仍需限制新增线程数量
  *  {@link CustomThreadPoolExecutor#abortPolicy} 任务放弃策略用于在线程资源已耗尽仍存在无法及时的任务时，提供一种兜底策略来处理这部分任务
- *  {@link CustomThreadPoolExecutor#keepLiveTime} 当任务处理完毕后，一定时间内仍未有新任务时，需及时释放掉空闲的资源，keepLiveTime用于控制空闲资源的存活时间
+ *  {@link CustomThreadPoolExecutor#keepAliveTime} 当任务处理完毕后，一定时间内仍未有新任务时，需及时释放掉空闲的资源，keepLiveTime用于控制空闲资源的存活时间
  *
  *  线程池工作流程：
  *  1. 任务提交时，优先创建核心线程来处理任务
@@ -62,7 +62,7 @@ public class CustomThreadPoolExecutor implements Executor {
     /**
      * 线程存活时间
      */
-    private final long keepLiveTime;
+    private final long keepAliveTime;
 
     /**
      * 阻塞队列
@@ -86,17 +86,17 @@ public class CustomThreadPoolExecutor implements Executor {
      */
     private final AtomicInteger workerCount = new AtomicInteger(0);
 
-    public CustomThreadPoolExecutor(int corePoolSize, int maxPoolSize, long keepLiveTime, TimeUnit unit, BlockingQueue<Runnable> taskQueue, int abortPolicy) {
-        this("custom-thread-", corePoolSize, maxPoolSize, keepLiveTime, unit, taskQueue, abortPolicy);
+    public CustomThreadPoolExecutor(int corePoolSize, int maxPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> taskQueue, int abortPolicy) {
+        this("custom-thread-", corePoolSize, maxPoolSize, keepAliveTime, unit, taskQueue, abortPolicy);
     }
 
-    public CustomThreadPoolExecutor(String threadNamePrefix, int corePoolSize, int maxPoolSize, long keepLiveTime, TimeUnit unit, BlockingQueue<Runnable> taskQueue, int abortPolicy) {
+    public CustomThreadPoolExecutor(String threadNamePrefix, int corePoolSize, int maxPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> taskQueue, int abortPolicy) {
         this.threadNamePrefix = threadNamePrefix;
         this.corePoolSize = corePoolSize;
         this.maxPoolSize = maxPoolSize;
         this.taskQueue = taskQueue;
         this.abortPolicy = abortPolicy;
-        this.keepLiveTime = unit.toMillis(keepLiveTime);
+        this.keepAliveTime = unit.toMillis(keepAliveTime);
         this.workers = new HashSet<>(this.maxPoolSize);
     }
 
@@ -202,7 +202,7 @@ public class CustomThreadPoolExecutor implements Executor {
                 // poll 方法取走BlockingQueue中排首位的对象，若不能立即获取，则可等待 keepLiveTime 规定的时间，超时时返回null
                 // 通过该操作控制了线程池内线程的存活时间
                 // 当前实现中未区分核心线程与非核心线程的存活时间控制
-                return taskQueue.poll(keepLiveTime, TimeUnit.MILLISECONDS);
+                return taskQueue.poll(keepAliveTime, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                log.error("获取任务异常，返回空", e);
                return null;
