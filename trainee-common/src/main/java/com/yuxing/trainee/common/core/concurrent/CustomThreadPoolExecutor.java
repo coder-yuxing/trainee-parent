@@ -16,6 +16,21 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  *  {@link Executor} 实现了任务发布于任务执行的解耦，任务发布者只需关心业务逻辑的实现，隐藏了任务的执行与线程管理的细节
  *
+ *  线程池中各参数的作用：
+ *  {@link CustomThreadPoolExecutor#corePoolSize} 线程是系统稀缺资源，不能无限制申请，通过corePoolSize 控制线程池中线程的数量
+ *  {@link CustomThreadPoolExecutor#taskQueue} 当核心线程已全部创建，仍无法及时处理用户提交的任务，需将其临时存放至任务队列，以便后续线程空闲时处理
+ *  {@link CustomThreadPoolExecutor#maxPoolSize} 当任务队列空间耗尽，仍存在用户提交的任务无法处理时，线程池需提供一定的弹性空间允许在大量任务积压时，增加线程数量来处理任务，但仍需限制新增线程数量
+ *  {@link CustomThreadPoolExecutor#abortPolicy} 任务放弃策略用于在线程资源已耗尽仍存在无法及时的任务时，提供一种兜底策略来处理这部分任务
+ *  {@link CustomThreadPoolExecutor#keepLiveTime} 当任务处理完毕后，一定时间内仍未有新任务时，需及时释放掉空闲的资源，keepLiveTime用于控制空闲资源的存活时间
+ *
+ *  线程池工作流程：
+ *  1. 任务提交时，优先创建核心线程来处理任务
+ *  2. 核心线程资源耗尽，则将任务加入阻塞队列，等待空闲核心线程处理
+ *  3. 若阻塞队列资源耗尽，仍存在任务无法及时处理，则尝试创建非核心线程进行处理
+ *  4. 若非核心线程资源耗尽，剩余任务通过任务放弃策略进行处理
+ *  5. 当任务处理完毕后，一段时间后无法获取任务，则将闲置资源释放
+ *  6. 对于 1&3 中创建的线程，当线程创建后即加入线程池中，并开启线程轮询获取任务，并进行执行，在无法获取任务后等待资源释放
+ *
  *  采用生产者-消费者模型完成任务的提交 & 任务的消费
  *  - {@link CustomThreadPoolExecutor#execute(Runnable)} 完成生产者角色
  *  - {@link Worker} 完成消费者角色
@@ -92,7 +107,6 @@ public class CustomThreadPoolExecutor implements Executor {
             throw new NullPointerException();
         }
 
-
         // 1.尝试创建核心线程执行任务
         int runningThreadNum = workerCount.get();
         if (runningThreadNum < this.corePoolSize
@@ -142,7 +156,7 @@ public class CustomThreadPoolExecutor implements Executor {
 
     private void abortTask(Runnable command) {
         // do something
-        System.err.println("abortTask");
+        log.debug("abortTask executed");
     }
 
     class Worker implements Runnable {
@@ -186,10 +200,11 @@ public class CustomThreadPoolExecutor implements Executor {
         private Runnable getTask() {
             try {
                 // poll 方法取走BlockingQueue中排首位的对象，若不能立即获取，则可等待 keepLiveTime 规定的时间，超时时返回null
-                // 通过该操作控制了线程的存活时间
+                // 通过该操作控制了线程池内线程的存活时间
+                // 当前实现中未区分核心线程与非核心线程的存活时间控制
                 return taskQueue.poll(keepLiveTime, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
-               // e.printStackTrace();
+               log.error("获取任务异常，返回空", e);
                return null;
             }
         }
