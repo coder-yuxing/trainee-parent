@@ -3,10 +3,11 @@ package com.yuxing.trainee.common.core.concurrent;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -36,12 +37,17 @@ public class CustomThreadPoolExecutor implements Executor {
     /**
      * 核心线程数
      */
-    private final int coreWorkerSize;
+    private final int corePoolSize;
 
     /**
      * 最大线程数
      */
-    private final int maxWorkerSize;
+    private final int maxPoolSize;
+
+    /**
+     * 线程存活时间
+     */
+    private final long keepLiveTime;
 
     /**
      * 阻塞队列
@@ -58,21 +64,25 @@ public class CustomThreadPoolExecutor implements Executor {
     /**
      * 工作线程
      */
-    private final List<Worker> workers;
+    private final Set<Worker> workers;
 
-    private AtomicInteger workerCount = new AtomicInteger(0);
+    /**
+     * 工作线程数量
+     */
+    private final AtomicInteger workerCount = new AtomicInteger(0);
 
-    public CustomThreadPoolExecutor(int coreWorkerSize, int maxWorkerSize, BlockingQueue<Runnable> taskQueue, int abortPolicy) {
-        this("custom-thread-", coreWorkerSize, maxWorkerSize, taskQueue, abortPolicy);
+    public CustomThreadPoolExecutor(int corePoolSize, int maxPoolSize, long keepLiveTime, TimeUnit unit, BlockingQueue<Runnable> taskQueue, int abortPolicy) {
+        this("custom-thread-", corePoolSize, maxPoolSize, keepLiveTime, unit, taskQueue, abortPolicy);
     }
 
-    public CustomThreadPoolExecutor(String threadNamePrefix, int coreWorkerSize, int maxWorkerSize, BlockingQueue<Runnable> taskQueue, int abortPolicy) {
+    public CustomThreadPoolExecutor(String threadNamePrefix, int corePoolSize, int maxPoolSize, long keepLiveTime, TimeUnit unit, BlockingQueue<Runnable> taskQueue, int abortPolicy) {
         this.threadNamePrefix = threadNamePrefix;
-        this.coreWorkerSize = coreWorkerSize;
-        this.maxWorkerSize = maxWorkerSize;
+        this.corePoolSize = corePoolSize;
+        this.maxPoolSize = maxPoolSize;
         this.taskQueue = taskQueue;
         this.abortPolicy = abortPolicy;
-        this.workers = new ArrayList<>(this.maxWorkerSize);
+        this.keepLiveTime = unit.toMillis(keepLiveTime);
+        this.workers = new HashSet<>(this.maxPoolSize);
     }
 
     @Override
@@ -85,7 +95,7 @@ public class CustomThreadPoolExecutor implements Executor {
 
         // 1.尝试创建核心线程执行任务
         int runningThreadNum = workerCount.get();
-        if (runningThreadNum < this.coreWorkerSize
+        if (runningThreadNum < this.corePoolSize
                 && this.addWorker(command, true)) {
             // 若核心线程创建成功，则直接返回
             return;
@@ -98,7 +108,7 @@ public class CustomThreadPoolExecutor implements Executor {
 
         // 3.阻塞队列已满，则尝试创建非核心线程执行任务
         runningThreadNum = workerCount.get();
-        if (runningThreadNum < this.maxWorkerSize
+        if (runningThreadNum < this.maxPoolSize
                 && this.addWorker(command, false)) {
             return;
         }
@@ -109,7 +119,7 @@ public class CustomThreadPoolExecutor implements Executor {
 
 
     private boolean addWorker(Runnable firstTask, boolean core) {
-        int maxNum = core ? this.coreWorkerSize : this.maxWorkerSize;
+        int maxNum = core ? this.corePoolSize : this.maxPoolSize;
         int runningThreadNum = this.workerCount.get();
         if (runningThreadNum < maxNum) {
             Worker worker = new Worker(firstTask);
@@ -132,6 +142,7 @@ public class CustomThreadPoolExecutor implements Executor {
 
     private void abortTask(Runnable command) {
         // do something
+        System.err.println("abortTask");
     }
 
     class Worker implements Runnable {
@@ -163,6 +174,7 @@ public class CustomThreadPoolExecutor implements Executor {
                 lock.lock();
                 try {
                     // 未获取到任务，则从工作线程集合中删除当前线程
+                    log.debug("指定时间内未获取到任务，线程{}执行完毕，即将释放资源", this.thread.getName());
                     workers.remove(this);
                     workerCount.decrementAndGet();
                 } finally {
@@ -173,7 +185,9 @@ public class CustomThreadPoolExecutor implements Executor {
 
         private Runnable getTask() {
             try {
-                return taskQueue.take();
+                // poll 方法取走BlockingQueue中排首位的对象，若不能立即获取，则可等待 keepLiveTime 规定的时间，超时时返回null
+                // 通过该操作控制了线程的存活时间
+                return taskQueue.poll(keepLiveTime, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                // e.printStackTrace();
                return null;

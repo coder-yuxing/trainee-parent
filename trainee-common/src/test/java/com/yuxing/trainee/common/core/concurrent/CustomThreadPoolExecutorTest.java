@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
@@ -17,7 +18,7 @@ public class CustomThreadPoolExecutorTest {
     @Test
     public void executeTest() throws Exception {
 
-        Executor threadPool = new CustomThreadPoolExecutor("test", 5, 10, new ArrayBlockingQueue<>(15), 0);
+        Executor threadPool = new CustomThreadPoolExecutor("test", 5, 10, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<>(15), 0);
         AtomicInteger num = new AtomicInteger(0);
 
         for (int i = 0; i < 100; i++) {
@@ -32,5 +33,7 @@ public class CustomThreadPoolExecutorTest {
         }
 
         Thread.sleep(Integer.MAX_VALUE);
+
+
     }
 }
