@@ -15,7 +15,7 @@ public class ConditionTest {
 
 
     @Test
-    public void waitAndNotifyTest() throws Exception {
+    public void objectWaitAndNotifyTest() throws Exception {
         TaskQueue taskQueue = new TaskQueue();
         List<Thread> taskThreads = new ArrayList<>(5);
         for (int i = 0; i < 5; i++) {

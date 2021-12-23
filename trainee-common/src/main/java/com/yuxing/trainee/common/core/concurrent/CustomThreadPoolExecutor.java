@@ -31,6 +31,8 @@ import java.util.concurrent.locks.ReentrantLock;
  *  5. 当任务处理完毕后，一段时间后无法获取任务，则将闲置资源释放
  *  6. 对于 1&3 中创建的线程，当线程创建后即加入线程池中，并开启线程轮询获取任务，并进行执行，在无法获取任务后等待资源释放
  *
+ *  // TODO(yuxing): 缺少线程池生命周期管理
+ *
  *  采用生产者-消费者模型完成任务的提交 & 任务的消费
  *  - {@link CustomThreadPoolExecutor#execute(Runnable)} 完成生产者角色
  *  - {@link Worker} 完成消费者角色
@@ -77,7 +79,10 @@ public class CustomThreadPoolExecutor implements Executor {
     private final int abortPolicy;
 
     /**
-     * 工作线程
+     * 工作线程集合
+     *
+     * 线程池需要管理线程的生命周期，需要在线程长时间不运行时进行资源回收
+     * 此处通过workers集合持有线程池中正在运行线程的引用，就可以通过添加引用、移除引用这样的操作来控制线程的生命周期
      */
     private final Set<Worker> workers;
 
