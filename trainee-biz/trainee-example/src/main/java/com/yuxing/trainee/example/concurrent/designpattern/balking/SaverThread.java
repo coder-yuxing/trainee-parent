@@ -6,11 +6,11 @@ import java.util.concurrent.TimeUnit;
  * @author yuxing
  * @since 2021/12/24
  */
-public class ServerThread implements Runnable {
+public class SaverThread implements Runnable {
 
     private final Data data;
 
-    public ServerThread(Data data) {
+    public SaverThread(Data data) {
         this.data = data;
     }
 

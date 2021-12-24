@@ -6,13 +6,13 @@ import java.util.Random;
  * @author yuxing
  * @since 2021/12/24
  */
-public class ClientThread implements Runnable {
+public class ChangerThread implements Runnable {
 
     private static final Random random = new Random();
 
     private final Data data;
 
-    public ClientThread(Data data) {
+    public ChangerThread(Data data) {
         this.data = data;
     }
 
