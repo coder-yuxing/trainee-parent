@@ -18,5 +18,6 @@
 ## 3.Interviews
 ### 3.1并发相关
 - [volatile关键字的可见性: VisibilityTest#volatileVisibilityTest()](https://github.com/coder-yuxing/trainee-parent/blob/master/trainee-biz/trainee-example/src/main/java/com/yuxing/trainee/example/interview/concurrent/VisibilityTest.java)
+- [管程是什么? Java中关于管程的实现有哪些？区别是什么？](https://github.com/coder-yuxing/trainee-parent/issues/11#issuecomment-1002136551)
 
 
