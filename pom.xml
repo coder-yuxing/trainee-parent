@@ -16,6 +16,7 @@
     <module>trainee-biz</module>
     <module>trainee-generator</module>
     <module>trainee-netty</module>
+    <module>trainee-kotlin</module>
   </modules>
 
   <properties>
