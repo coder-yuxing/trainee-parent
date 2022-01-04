@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * 变量类型
  *
- * @author dingguangren
+ * @author yuxing
  */
 @AllArgsConstructor
 public enum QuotaVariableType implements VariableType {
