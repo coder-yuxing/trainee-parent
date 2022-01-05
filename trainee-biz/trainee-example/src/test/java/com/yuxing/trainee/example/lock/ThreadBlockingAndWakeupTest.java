@@ -6,6 +6,9 @@ import org.junit.Test;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * java中线程的阻塞与唤醒
@@ -14,6 +17,83 @@ import java.util.concurrent.BlockingQueue;
  * @since 2022/1/4
  */
 public class ThreadBlockingAndWakeupTest {
+
+    /**
+     * Condition: await & signal
+     * java在语言层面提供了 Lock 与 Condition: await & signal 方法配合完成线程间等待/通知的机制
+     * 其底层基于 LockSupport#park & LockSupport#unpark
+     */
+    @Test
+    public void conditionAwaitAndSignalTest() throws Exception {
+        ReentrantLock lock = new ReentrantLock();
+        Condition condition = lock.newCondition();
+        ConditionAwait conditionAwait = new ConditionAwait(lock, condition);
+        ConditionSignal conditionSignal = new ConditionSignal(lock, condition);
+        // new Thread(conditionAwait).start();
+        // // 阻塞2s,以便让conditionAwait先执行
+        // Thread.sleep(2000);
+        // new Thread(conditionSignal).start();
+
+        // 让conditionSignal运行(signal先调用)
+        // signal先调用后调用await会导致线程阻塞无法被唤醒
+        new Thread(conditionSignal).start();
+        Thread.sleep(2000);
+        new Thread(conditionAwait).start();
+    }
+
+    static class ConditionSignal implements Runnable {
+        private final Lock lock;
+        private final Condition condition;
+
+        public ConditionSignal(Lock lock, Condition condition) {
+            this.lock = lock;
+            this.condition = condition;
+        }
+
+        @Override
+        public void run() {
+            lock.lock();
+            try {
+                System.err.println("ConditionSignal start...");
+                System.err.println("ConditionSignal 唤醒其他线程...");
+                condition.signalAll();
+                System.err.println("ConditionSignal 继续运行...");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
+            }
+        }
+    }
+
+    static class ConditionAwait implements Runnable {
+
+        private final Lock lock;
+        private final Condition condition;
+
+        public ConditionAwait(Lock lock, Condition condition) {
+            this.lock = lock;
+            this.condition = condition;
+        }
+
+        @Override
+        public void run() {
+            lock.lock();
+            try {
+                System.err.println("ConditionAwait start...");
+                System.err.println("ConditionAwait await...");
+                condition.await();
+                System.err.println("ConditionAwait 继续运行...");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
+            }
+        }
+    }
+
+
+
 
     /**
      * Object: wait、notify、notifyAll
