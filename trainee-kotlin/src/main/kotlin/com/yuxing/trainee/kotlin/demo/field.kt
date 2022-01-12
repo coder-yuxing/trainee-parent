@@ -1,4 +1,4 @@
-package com.yuxing.trainee.kotlin
+package com.yuxing.trainee.kotlin.demo
 
 /**
  * kotlin 属性与字段

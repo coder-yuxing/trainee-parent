@@ -1,4 +1,4 @@
-package com.yuxing.trainee.kotlin
+package com.yuxing.trainee.kotlin.demo
 
 /**
  * Kotlin 中的类与继承
