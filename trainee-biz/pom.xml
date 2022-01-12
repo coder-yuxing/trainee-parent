@@ -18,5 +18,6 @@
   <modules>
     <module>trainee-test</module>
     <module>trainee-example</module>
+    <module>trainee-detection</module>
   </modules>
 </project>

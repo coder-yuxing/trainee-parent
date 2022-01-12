@@ -37,6 +37,7 @@
     <hutool.version>5.7.16</hutool.version>
     <jedis.version>3.6.1</jedis.version>
     <zkclient.version>0.11</zkclient.version>
+    <curator.version>5.2.0</curator.version>
     <fastjson.version>1.2.70</fastjson.version>
 
     <!-- 日志 -->
@@ -187,6 +188,13 @@
         <version>${netty.version}</version>
         <scope>compile</scope>
       </dependency>
+
+      <dependency>
+        <groupId>org.apache.curator</groupId>
+        <artifactId>curator-framework</artifactId>
+        <version>${curator.version}</version>
+      </dependency>
+
 
     </dependencies>
   </dependencyManagement>
