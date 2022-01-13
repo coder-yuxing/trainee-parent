@@ -1,7 +1,5 @@
 package com.yuxing.trainee.common.core.lock.zookeeper;
 
-import org.I0Itec.zkclient.ZkClient;
-
 public class ZookeeperDistributedLockTest {
 
     private static final String LOCK_ROOT_PATH = "/lock";
@@ -24,7 +22,7 @@ public class ZookeeperDistributedLockTest {
 //
 //        curatorFramework.close();
 
-        ZkClient zkClient = new ZkClient("10.10.32.46:2181");
-        zkClient.createPersistent("/test");
+        // ZkClient zkClient = new ZkClient("10.10.32.46:2181");
+        // zkClient.createPersistent("/test");
     }
 }
