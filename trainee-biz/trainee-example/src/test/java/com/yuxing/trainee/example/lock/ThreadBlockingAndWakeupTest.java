@@ -8,15 +8,87 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * java中线程的阻塞与唤醒
+ * <b>java中线程的阻塞与唤醒</b>
+ * ① Thread.sleep(n)方法 {@link ThreadBlockingAndWakeupTest#sleepTest()}
+ * ② 过时的Thread.suspend() & Thread.resume()组合 {@link ThreadBlockingAndWakeupTest#suspendAndResumeTest()}
+ * ③ Object.wait() & Object.notify()/Object.notifyAll()组合 {@link ThreadBlockingAndWakeupTest#waitAndNotifyAllTest()}
+ * ④ LockSupport.park() & LockSupport.unpark()组合 {@link ThreadBlockingAndWakeupTest#parkAndUnParkTest()}
  *
  * @author yuxing
  * @since 2022/1/4
  */
 public class ThreadBlockingAndWakeupTest {
+
+    /**
+     * LockSupport.park() & LockSupport.unpark()
+     */
+    @Test
+    public void parkAndUnParkTest() throws Exception {
+        SuspendTestThead suspendTestThead = new SuspendTestThead();
+        suspendTestThead.start();
+
+        Thread.sleep(10);
+
+        suspendTestThead.parkThread();
+        System.err.println("main end");
+        suspendTestThead.unParkThread();
+    }
+
+    static class SuspendTestThead extends Thread {
+        private boolean isPark = false;
+
+        @Override
+        public void run() {
+            int i = 0;
+            while (true) {
+                if (this.isPark) {
+                    LockSupport.park();
+                }
+                System.err.println("线程执行中: " + i++);
+            }
+        }
+
+        public void parkThread() {
+            this.isPark = true;
+        }
+
+        public void unParkThread() {
+            this.isPark = false;
+            LockSupport.unpark(this);
+        }
+    }
+
+    /**
+     * sleep方法控制线程的阻塞与唤醒
+     */
+    @Test
+    public void sleepTest() throws Exception {
+        SleepThread sleepThread = new SleepThread();
+        sleepThread.start();
+        sleepThread.join();
+
+        // Thread.sleep(Integer.MAX_VALUE);
+    }
+
+    static class SleepThread extends Thread {
+
+        @Override
+        public void run() {
+            System.err.println("线程开始执行...");
+            long startTime = System.currentTimeMillis();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            long endTime = System.currentTimeMillis();
+            System.err.println("线程睡眠3s后结束执行: " + (endTime - startTime));
+        }
+    }
 
     /**
      * Condition: await & signal
@@ -91,9 +163,6 @@ public class ThreadBlockingAndWakeupTest {
             }
         }
     }
-
-
-
 
     /**
      * Object: wait、notify、notifyAll
