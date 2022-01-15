@@ -11,13 +11,7 @@ spring:
       password:
 
 trainee-search:
+  log:
+    level: DEBUG
   index:
     goods: goods
-
-logging:
-  level:
-    org:
-      elasticsearch: DEBUG
-      springframework:
-        data:
-          elasticsearch: DEBUG
