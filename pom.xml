@@ -24,6 +24,8 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
+    <trainee-version>1.0-SNAPSHOT</trainee-version>
+
     <spring-boot.version>2.4.6</spring-boot.version>
     <spring-cloud.version>2020.0.3</spring-cloud.version>
     <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
@@ -201,6 +203,11 @@
         <version>${curator.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>com.yuxing</groupId>
+        <artifactId>trainee-common</artifactId>
+        <version>${trainee-version}</version>
+      </dependency>
 
     </dependencies>
   </dependencyManagement>

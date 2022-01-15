@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: trainee-search-service
+  elasticsearch:
+    rest:
+      uris: localhost:9200
+      username: elastic
+      password:
+
+trainee-search:
+  index:
+    goods: goods
