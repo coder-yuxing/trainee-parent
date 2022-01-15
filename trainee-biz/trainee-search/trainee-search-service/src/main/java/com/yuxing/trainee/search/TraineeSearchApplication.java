@@ -1,6 +1,7 @@
 package com.yuxing.trainee.search;
 
 import com.yuxing.trainee.common.core.Pager;
+import com.yuxing.trainee.common.core.Result;
 import com.yuxing.trainee.search.api.command.SaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.dto.EsGoodsDTO;
 import com.yuxing.trainee.search.api.query.EsGoodsQuery;
@@ -29,24 +30,24 @@ public class TraineeSearchApplication {
     private EsGoodsSearchFacadeService esGoodsSearchFacadeService;
 
     @PostMapping("/goods")
-    public String save(@RequestBody SaveGoodsDocCommand command) {
+    public Result<?> save(@RequestBody SaveGoodsDocCommand command) {
         esGoodsSearchFacadeService.saveDoc(command);
-        return "success";
+        return Result.success();
     }
 
     @GetMapping("/goods/{id}")
-    public Object getById(@PathVariable Long id) {
-        return esGoodsSearchFacadeService.getById(id);
+    public Result<EsGoodsDTO> getById(@PathVariable Long id) {
+        return Result.success(esGoodsSearchFacadeService.getById(id));
     }
 
     @DeleteMapping("/goods/{id}")
-    public String deleteById(@PathVariable Long id) {
+    public Result<?> deleteById(@PathVariable Long id) {
         esGoodsSearchFacadeService.deletedById(id);
-        return "success";
+        return Result.success();
     }
 
     @GetMapping("/goods/search")
-    public Pager<EsGoodsDTO> search(EsGoodsQuery query) {
-        return esGoodsSearchFacadeService.search(query);
+    public Result<Pager<EsGoodsDTO>> search(EsGoodsQuery query) {
+        return Result.success(esGoodsSearchFacadeService.search(query));
     }
 }
