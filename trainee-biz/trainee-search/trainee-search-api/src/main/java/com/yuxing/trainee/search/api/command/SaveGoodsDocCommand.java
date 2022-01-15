@@ -30,4 +30,9 @@ public class SaveGoodsDocCommand {
      */
     private String code;
 
+    /**
+     * 素材类型
+     */
+    private Integer type;
+
 }

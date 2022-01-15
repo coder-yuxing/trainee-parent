@@ -11,7 +11,6 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 
 /**
  * 素材文档数据结构映射对像
- * -
  *
  * @author yuxing
  * @since 2022/1/14
@@ -19,6 +18,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+// indexName 支持SpEL表达式
 @Document(indexName = "#{@searchIndexConfig.getGoods()}")
 @Setting(settingPath = "elastic/es-goods-setting.json")
 public class EsGoods {
@@ -36,9 +36,14 @@ public class EsGoods {
     private String name;
 
     /**
-     * 模型编码
+     * 素材编码
      */
     @Field(type = FieldType.Keyword)
     private String code;
+
+    /**
+     * 素材类型
+     */
+    private Integer type;
 
 }

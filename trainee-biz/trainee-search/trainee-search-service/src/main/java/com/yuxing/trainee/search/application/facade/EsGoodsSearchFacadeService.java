@@ -1,7 +1,9 @@
 package com.yuxing.trainee.search.application.facade;
 
+import com.yuxing.trainee.common.core.Pager;
 import com.yuxing.trainee.search.api.command.SaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.dto.EsGoodsDTO;
+import com.yuxing.trainee.search.api.query.EsGoodsQuery;
 
 /**
  * 素材搜索门面接口
@@ -32,4 +34,12 @@ public interface EsGoodsSearchFacadeService {
      * @param id 素材ID
      */
     void deletedById(Long id);
+
+    /**
+     * 素材文档分页查询
+     *
+     * @param query 查询条件
+     * @return 单页文档数据
+     */
+    Pager<EsGoodsDTO> search(EsGoodsQuery query);
 }

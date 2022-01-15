@@ -16,5 +16,11 @@
 
   <name>trainee-search-api</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>com.yuxing</groupId>
+      <artifactId>trainee-common</artifactId>
+    </dependency>
+  </dependencies>
 
 </project>

@@ -1,6 +1,9 @@
 package com.yuxing.trainee.search;
 
+import com.yuxing.trainee.common.core.Pager;
 import com.yuxing.trainee.search.api.command.SaveGoodsDocCommand;
+import com.yuxing.trainee.search.api.dto.EsGoodsDTO;
+import com.yuxing.trainee.search.api.query.EsGoodsQuery;
 import com.yuxing.trainee.search.application.facade.EsGoodsSearchFacadeService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -40,5 +43,10 @@ public class TraineeSearchApplication {
     public String deleteById(@PathVariable Long id) {
         esGoodsSearchFacadeService.deletedById(id);
         return "success";
+    }
+
+    @GetMapping("/goods/search")
+    public Pager<EsGoodsDTO> search(EsGoodsQuery query) {
+        return esGoodsSearchFacadeService.search(query);
     }
 }
