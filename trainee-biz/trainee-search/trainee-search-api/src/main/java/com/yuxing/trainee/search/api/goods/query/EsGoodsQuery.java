@@ -1,7 +1,7 @@
-package com.yuxing.trainee.search.api.query;
+package com.yuxing.trainee.search.api.goods.query;
 
 import com.yuxing.trainee.common.core.Query;
-import com.yuxing.trainee.search.api.constant.EsGoodsAggregationField;
+import com.yuxing.trainee.search.api.goods.constant.EsGoodsAggregationField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

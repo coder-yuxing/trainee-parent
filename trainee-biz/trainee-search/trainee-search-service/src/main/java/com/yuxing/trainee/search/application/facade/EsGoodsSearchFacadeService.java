@@ -1,9 +1,9 @@
 package com.yuxing.trainee.search.application.facade;
 
 import com.yuxing.trainee.common.core.Pager;
-import com.yuxing.trainee.search.api.command.SaveGoodsDocCommand;
-import com.yuxing.trainee.search.api.dto.EsGoodsDTO;
-import com.yuxing.trainee.search.api.query.EsGoodsQuery;
+import com.yuxing.trainee.search.api.goods.command.SaveGoodsDocCommand;
+import com.yuxing.trainee.search.api.goods.dto.EsGoodsDTO;
+import com.yuxing.trainee.search.api.goods.query.EsGoodsQuery;
 
 /**
  * 素材搜索门面接口

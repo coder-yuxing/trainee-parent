@@ -1,6 +1,6 @@
 package com.yuxing.trainee.search.domain.valuaobject;
 
-import com.yuxing.trainee.search.api.constant.EsGoodsAggregationField;
+import com.yuxing.trainee.search.api.goods.constant.EsGoodsAggregationField;
 import lombok.Data;
 
 /**

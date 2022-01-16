@@ -2,7 +2,7 @@ package com.yuxing.trainee.search.domain.entity;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.yuxing.trainee.search.api.constant.EsGoodsAggregationField;
+import com.yuxing.trainee.search.api.goods.constant.EsGoodsAggregationField;
 import com.yuxing.trainee.search.domain.valuaobject.Aggregation;
 import lombok.Data;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -65,8 +65,6 @@ public class EsGoodsSearchQuery {
      * 聚合字段
      */
     private List<Aggregation> aggregations;
-
-
 
     public NativeSearchQuery getQuery() {
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();

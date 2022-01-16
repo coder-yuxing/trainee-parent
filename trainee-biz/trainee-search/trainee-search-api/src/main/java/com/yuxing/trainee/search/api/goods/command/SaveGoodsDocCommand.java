@@ -1,4 +1,4 @@
-package com.yuxing.trainee.search.api.command;
+package com.yuxing.trainee.search.api.goods.command;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

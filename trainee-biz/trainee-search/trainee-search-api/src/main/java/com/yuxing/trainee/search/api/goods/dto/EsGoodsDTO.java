@@ -1,4 +1,4 @@
-package com.yuxing.trainee.search.api.dto;
+package com.yuxing.trainee.search.api.goods.dto;
 
 import lombok.Data;
 
