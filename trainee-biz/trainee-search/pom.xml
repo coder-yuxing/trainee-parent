@@ -31,28 +31,4 @@
     </dependencies>
   </dependencyManagement>
 
-  <build>
-    <finalName>trainee-test</finalName>
-    <resources>
-      <resource>
-        <directory>trainee-search-service/src/main/java</directory>
-        <includes>
-          <include>**/*.xml</include>
-        </includes>
-        <filtering>false</filtering>
-      </resource>
-      <resource>
-        <directory>trainee-search-service/src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>trainee-search-service/src/test/java</directory>
-        <includes>
-          <include>**/*.xml</include>
-          <include>**/*.properties</include>
-        </includes>
-        <filtering>false</filtering>
-      </resource>
-    </resources>
-  </build>
-
 </project>

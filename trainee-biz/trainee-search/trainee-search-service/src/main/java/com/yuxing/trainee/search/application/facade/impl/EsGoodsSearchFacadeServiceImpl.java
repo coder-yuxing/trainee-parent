@@ -9,11 +9,10 @@ import com.yuxing.trainee.search.application.facade.EsGoodsSearchFacadeService;
 import com.yuxing.trainee.search.domain.entity.EsGoods;
 import com.yuxing.trainee.search.domain.entity.EsGoodsSearchQuery;
 import com.yuxing.trainee.search.domain.respository.EsGoodsRepository;
+import com.yuxing.trainee.search.infrastructure.util.ElasticsearchUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class EsGoodsSearchFacadeServiceImpl implements EsGoodsSearchFacadeServic
 
     @Override
     public void saveDoc(SaveGoodsDocCommand command) {
-        esGoodsRepository.save(new EsGoods(command.getId().toString(), command.getName(), command.getCode(), command.getType()));
+        esGoodsRepository.save(EsGoodsAssembler.INSTANCE.toDo(command));
     }
 
     @Override
@@ -57,11 +56,12 @@ public class EsGoodsSearchFacadeServiceImpl implements EsGoodsSearchFacadeServic
 
     @Override
     public Pager<EsGoodsDTO> search(EsGoodsQuery query) {
-        NativeSearchQuery searchQuery = new EsGoodsSearchQuery(query.getPosition(), query.getPageSize(), query.getKeyword(), query.getType()).getQuery();
-        SearchHits<EsGoods> hits = elasticsearchRestTemplate.search(searchQuery, EsGoods.class);
+        EsGoodsSearchQuery searchQuery = EsGoodsAssembler.INSTANCE.toQuery(query);
+        SearchHits<EsGoods> hits = elasticsearchRestTemplate.search(searchQuery.getQuery(), EsGoods.class);
         Pager<EsGoodsDTO> pager = new Pager<>(query.getPage(), query.getPageSize(), hits.getTotalHits());
         List<EsGoodsDTO> collect = hits.getSearchHits().stream().map(s -> EsGoodsAssembler.INSTANCE.toDto(s.getContent())).collect(Collectors.toList());
         pager.setData(collect);
+        pager.setAggregations(ElasticsearchUtils.parseAggregations(hits.getAggregations()));
         return pager;
     }
 }

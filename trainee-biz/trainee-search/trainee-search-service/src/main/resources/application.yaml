@@ -9,6 +9,14 @@ spring:
       uris: localhost:9200
       username: elastic
       password:
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/trainee
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:com/yuxing/trainee/search/infrastructure/dao/xml/*.xml
 
 trainee-search:
   log:

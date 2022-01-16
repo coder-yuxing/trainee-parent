@@ -9,6 +9,8 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
+import java.util.List;
+
 /**
  * 素材文档数据结构映射对像
  *
@@ -45,5 +47,43 @@ public class EsGoods {
      * 素材类型
      */
     private Integer type;
+
+    /**
+     * 品类ID
+     */
+    private Long categoryId;
+
+    /**
+     * 素材属性值
+     */
+    @Field(type = FieldType.Nested)
+    private List<EsProp> props;
+
+    /**
+     * 启停用
+     */
+    private Boolean enabled;
+
+    @Data
+    public static class EsProp {
+
+        /**
+         * 属性ID
+         */
+        @Field(type = FieldType.Keyword)
+        private Long id;
+
+        /**
+         * 展示类型
+         */
+        private Integer showType;
+
+        /**
+         * 属性值
+         */
+        @Field(type = FieldType.Keyword)
+        private List<String> values;
+
+    }
 
 }

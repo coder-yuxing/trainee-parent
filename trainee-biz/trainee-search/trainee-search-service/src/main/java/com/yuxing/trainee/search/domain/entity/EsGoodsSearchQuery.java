@@ -1,15 +1,24 @@
 package com.yuxing.trainee.search.domain.entity;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.yuxing.trainee.search.api.constant.EsGoodsAggregationField;
+import com.yuxing.trainee.search.domain.valuaobject.Aggregation;
 import lombok.Data;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.nested.NestedAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 素材文档查询
@@ -47,12 +56,31 @@ public class EsGoodsSearchQuery {
      */
     private Integer type;
 
+    /**
+     * 启停用
+     */
+    private Boolean enabled;
+
+    /**
+     * 聚合字段
+     */
+    private List<Aggregation> aggregations;
+
+
+
     public NativeSearchQuery getQuery() {
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+
         BoolQueryBuilder builder = new BoolQueryBuilder();
         // 条件筛选
         if (Objects.nonNull(this.type)) {
             builder.filter(QueryBuilders.termQuery("type", this.type));
         }
+
+        if (Objects.nonNull(this.enabled)) {
+            builder.filter(QueryBuilders.termQuery("enabled", this.enabled));
+        }
+
         // 关键字查询
         if (StrUtil.isNotBlank(this.keyword)) {
             String[] fieldNames = new String[] {"name"};
@@ -61,10 +89,32 @@ public class EsGoodsSearchQuery {
             builder.must(multiMatchQuery);
             builder.should(QueryBuilders.termQuery("code", this.keyword));
         }
+        queryBuilder.withQuery(builder);
 
-        return new NativeSearchQueryBuilder()
-                .withQuery(builder)
-                // 分页查询
-                .withPageable(PageRequest.of(this.page, this.pageSize)).build();
+        // 聚合查询
+        if (CollUtil.isNotEmpty(this.aggregations)) {
+            // 简单聚合
+            Map<EsGoodsAggregationField, List<Aggregation>> map = this.aggregations.stream().collect(Collectors.groupingBy(Aggregation::getField));
+            List<Aggregation> categoryAgg = map.get(EsGoodsAggregationField.CATEGORY);
+            if (CollUtil.isNotEmpty(categoryAgg)) {
+                queryBuilder.addAggregation(AggregationBuilders.terms(categoryAgg.get(0).getName()).field("categoryId"));
+            }
+
+            // 嵌套聚合 -> nested
+            List<Aggregation> propAgg = map.get(EsGoodsAggregationField.PROP);
+            if (CollUtil.isNotEmpty(propAgg)) {
+                TermsAggregationBuilder aggregation = AggregationBuilders.terms("prop").field("props.id.keyword")
+                        .subAggregation(AggregationBuilders.terms("propValue").field("props.values"));
+                NestedAggregationBuilder nestedAggregationBuilder = AggregationBuilders.nested(propAgg.get(0).getName(), "props")
+                        .subAggregation(aggregation);
+                queryBuilder.addAggregation(nestedAggregationBuilder);
+            }
+
+        }
+
+        // 分页查询
+        queryBuilder.withPageable(PageRequest.of(this.page, this.pageSize));
+        return queryBuilder.build();
+
     }
 }

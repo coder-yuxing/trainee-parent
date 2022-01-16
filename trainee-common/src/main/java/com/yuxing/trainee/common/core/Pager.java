@@ -2,7 +2,10 @@ package com.yuxing.trainee.common.core;
 
 import lombok.Data;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 分页工具类
@@ -56,4 +59,26 @@ public class Pager<T> {
      * 当前页数据
      */
     private List<T> data;
+
+    /**
+     * 聚合数据
+     */
+    private Map<String, List<AggregationInfo>> aggregations;
+
+    @Data
+    public static class AggregationInfo implements Serializable {
+
+        private static final long serialVersionUID = -4917654280443832357L;
+
+        private String key;
+
+        private Long docCount;
+
+        private List<AggregationInfo> child = new ArrayList<>();
+
+        public void addChild(AggregationInfo child) {
+            this.child.add(child);
+        }
+
+    }
 }

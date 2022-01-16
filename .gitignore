@@ -3,3 +3,5 @@ target
 */target
 *.iml
 .logs/
+trainee-biz/trainee-search/trainee-search-service/src/test
+trainee-biz/trainee-search/trainee-search-service/src/main/java/com/yuxing/trainee/search/infrastructure/dao/

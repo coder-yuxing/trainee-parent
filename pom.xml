@@ -46,7 +46,6 @@
     <slf4j-api.version>1.7.32</slf4j-api.version>
     <logback.version>1.2.10</logback.version>
     <!-- 单元测试 -->
-    <junit.version>4.13</junit.version>
     <jmh.version>1.32</jmh.version>
 
     <netty.version>4.1.72.Final</netty.version>
@@ -164,13 +163,6 @@
       </dependency>
 
       <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
         <groupId>org.openjdk.jmh</groupId>
         <artifactId>jmh-core</artifactId>
         <version>${jmh.version}</version>
@@ -223,6 +215,5 @@
       <artifactId>lombok</artifactId>
     </dependency>
   </dependencies>
-
 
 </project>

@@ -1,16 +1,20 @@
 package com.yuxing.trainee.search;
 
+import com.google.common.collect.ImmutableMap;
 import com.yuxing.trainee.common.core.Pager;
 import com.yuxing.trainee.common.core.Result;
 import com.yuxing.trainee.search.api.command.SaveGoodsDocCommand;
+import com.yuxing.trainee.search.api.constant.EsGoodsAggregationField;
 import com.yuxing.trainee.search.api.dto.EsGoodsDTO;
 import com.yuxing.trainee.search.api.query.EsGoodsQuery;
 import com.yuxing.trainee.search.application.facade.EsGoodsSearchFacadeService;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 /**
  * 搜索服务启动类
@@ -19,6 +23,7 @@ import javax.annotation.Resource;
  * @since 2022/1/14
  */
 @RestController
+@MapperScan("com.yuxing.trainee.search.infrastructure.dao")
 @SpringBootApplication
 public class TraineeSearchApplication {
 
@@ -48,6 +53,9 @@ public class TraineeSearchApplication {
 
     @GetMapping("/goods/search")
     public Result<Pager<EsGoodsDTO>> search(EsGoodsQuery query) {
+        EsGoodsQuery.Aggregation category = new EsGoodsQuery.Aggregation("category", EsGoodsAggregationField.CATEGORY);
+        EsGoodsQuery.Aggregation props = new EsGoodsQuery.Aggregation("props", EsGoodsAggregationField.PROP);
+        query.setAggregations(Arrays.asList(category, props));
         return Result.success(esGoodsSearchFacadeService.search(query));
     }
 }
