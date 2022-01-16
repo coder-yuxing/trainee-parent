@@ -25,4 +25,14 @@ public class EsGoodsDTO {
      * 素材编码
      */
     private String code;
+
+    /**
+     * 品类ID
+     */
+    private Long categoryId;
+
+    /**
+     * 启停用装填
+     */
+    private Boolean enabled;
 }

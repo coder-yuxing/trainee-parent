@@ -7,7 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.data.elasticsearch.annotations.Setting;
 
 import java.util.List;
 
@@ -22,7 +21,6 @@ import java.util.List;
 @AllArgsConstructor
 // indexName 支持SpEL表达式
 @Document(indexName = "#{@searchIndexConfig.getGoods()}")
-@Setting(settingPath = "elastic/es-goods-setting.json")
 public class EsGoods {
 
     /**

@@ -4,10 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.yuxing.trainee.search.api.goods.constant.EsGoodsAggregationField;
 import com.yuxing.trainee.search.domain.valuaobject.Aggregation;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import lombok.NoArgsConstructor;
+import org.apache.lucene.search.join.ScoreMode;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.nested.NestedAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
@@ -62,6 +63,11 @@ public class EsGoodsSearchQuery {
     private Boolean enabled;
 
     /**
+     * 属性筛选
+     */
+    private List<Prop> props;
+
+    /**
      * 聚合字段
      */
     private List<Aggregation> aggregations;
@@ -86,6 +92,18 @@ public class EsGoodsSearchQuery {
             multiMatchQuery.minimumShouldMatch("80%");
             builder.must(multiMatchQuery);
             builder.should(QueryBuilders.termQuery("code", this.keyword));
+        }
+
+        // 属性值嵌套查询
+        if (CollUtil.isNotEmpty(this.props)) {
+            this.props.forEach(p -> {
+                NestedQueryBuilder nestedQuery = QueryBuilders.nestedQuery("props",
+                        QueryBuilders.boolQuery()
+                                .must(QueryBuilders.termQuery("props.id.keyword", p.id))
+                                .must(QueryBuilders.termsQuery("props.values", p.value)),
+                        ScoreMode.Total);
+                builder.filter(nestedQuery);
+            });
         }
         queryBuilder.withQuery(builder);
 
@@ -114,5 +132,20 @@ public class EsGoodsSearchQuery {
         queryBuilder.withPageable(PageRequest.of(this.page, this.pageSize));
         return queryBuilder.build();
 
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Prop {
+        /**
+         * 属性ID
+         */
+        private Long id;
+
+        /**
+         * 属性值
+         */
+        private String value;
     }
 }
