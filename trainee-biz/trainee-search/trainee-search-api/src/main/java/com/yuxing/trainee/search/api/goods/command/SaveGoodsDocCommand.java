@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,11 +17,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SaveGoodsDocCommand {
+public class SaveGoodsDocCommand implements Serializable {
+
+    private static final long serialVersionUID = 1880361696680652246L;
 
     /**
      * 素材ID
      */
+    @NotNull(message = "主键不允许为空")
     private Long id;
 
     /**

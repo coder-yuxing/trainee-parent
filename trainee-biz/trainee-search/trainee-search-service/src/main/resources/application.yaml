@@ -14,6 +14,12 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        namespace: 1ac8447d-28f3-4f59-b428-271e95740ddf
+        server-addr: localhost:8848
+        group: TRAINEE
 
 mybatis:
   mapper-locations: classpath:com/yuxing/trainee/search/infrastructure/dao/xml/*.xml

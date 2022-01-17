@@ -2,6 +2,8 @@ package com.yuxing.trainee.common.core;
 
 import lombok.Getter;
 
+import java.io.Serializable;
+
 /**
  * 分页查询基础类
  *
@@ -9,7 +11,9 @@ import lombok.Getter;
  * @since 2022/1/15
  */
 @Getter
-public class Query {
+public class Query implements Serializable {
+
+    private static final long serialVersionUID = 5414242197348553095L;
 
     /**
      * 当前页码, 默认为第一页

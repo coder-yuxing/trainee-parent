@@ -41,7 +41,7 @@
     <zkclient.version>0.11</zkclient.version>
     <curator.version>5.2.0</curator.version>
     <fastjson.version>1.2.70</fastjson.version>
-
+    <hibernate-validator.version>6.1.7.Final</hibernate-validator.version>
     <!-- 日志 -->
     <slf4j-api.version>1.7.32</slf4j-api.version>
     <logback.version>1.2.10</logback.version>
@@ -193,6 +193,12 @@
         <groupId>org.apache.curator</groupId>
         <artifactId>curator-recipes</artifactId>
         <version>${curator.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${hibernate-validator.version}</version>
       </dependency>
 
       <dependency>

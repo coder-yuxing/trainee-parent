@@ -20,4 +20,14 @@
     <module>trainee-example</module>
     <module>trainee-search</module>
   </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.yuxing</groupId>
+        <artifactId>trainee-search-api</artifactId>
+        <version>${trainee-version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>

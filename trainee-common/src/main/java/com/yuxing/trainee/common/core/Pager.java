@@ -1,6 +1,7 @@
 package com.yuxing.trainee.common.core;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Map;
  * @since 2022/1/15
  */
 @Data
+@NoArgsConstructor
 public class Pager<T> {
 
     public Pager(Integer page, Integer pageSize, Long total) {

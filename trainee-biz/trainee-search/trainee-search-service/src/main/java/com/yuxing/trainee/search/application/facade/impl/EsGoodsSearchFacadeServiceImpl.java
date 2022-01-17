@@ -16,7 +16,6 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -40,17 +39,11 @@ public class EsGoodsSearchFacadeServiceImpl implements EsGoodsSearchFacadeServic
 
     @Override
     public EsGoodsDTO getById(Long id) {
-        if (Objects.isNull(id)) {
-            return null;
-        }
         return EsGoodsAssembler.INSTANCE.toDto(esGoodsRepository.findById(id.toString()).orElse(null));
     }
 
     @Override
     public void deletedById(Long id) {
-        if (Objects.isNull(id)) {
-            return;
-        }
         esGoodsRepository.deleteById(id.toString());
     }
 
