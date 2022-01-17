@@ -99,7 +99,7 @@ public class EsGoodsSearchQuery {
             this.props.forEach(p -> {
                 NestedQueryBuilder nestedQuery = QueryBuilders.nestedQuery("props",
                         QueryBuilders.boolQuery()
-                                .must(QueryBuilders.termQuery("props.id.keyword", p.id))
+                                .must(QueryBuilders.termQuery("props.name", p.id))
                                 .must(QueryBuilders.termsQuery("props.values", p.value)),
                         ScoreMode.Total);
                 builder.filter(nestedQuery);
@@ -119,7 +119,7 @@ public class EsGoodsSearchQuery {
             // 嵌套聚合 -> nested
             List<Aggregation> propAgg = map.get(EsGoodsAggregationField.PROP);
             if (CollUtil.isNotEmpty(propAgg)) {
-                TermsAggregationBuilder aggregation = AggregationBuilders.terms("prop").field("props.id.keyword")
+                TermsAggregationBuilder aggregation = AggregationBuilders.terms("prop").field("props.name")
                         .subAggregation(AggregationBuilders.terms("propValue").field("props.values"));
                 NestedAggregationBuilder nestedAggregationBuilder = AggregationBuilders.nested(propAgg.get(0).getName(), "props")
                         .subAggregation(aggregation);

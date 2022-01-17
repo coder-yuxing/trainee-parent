@@ -69,7 +69,7 @@ public class EsGoods {
          * 属性ID
          */
         @Field(type = FieldType.Keyword)
-        private Long id;
+        private String name;
 
         /**
          * 展示类型

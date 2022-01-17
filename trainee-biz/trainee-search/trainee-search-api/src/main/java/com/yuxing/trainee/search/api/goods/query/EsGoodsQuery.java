@@ -54,7 +54,7 @@ public class EsGoodsQuery extends Query {
         /**
          * 属性ID
          */
-        private Long id;
+        private String name;
 
         /**
          * 属性值

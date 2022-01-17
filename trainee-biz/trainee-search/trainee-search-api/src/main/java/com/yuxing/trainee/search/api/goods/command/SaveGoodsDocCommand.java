@@ -63,7 +63,7 @@ public class SaveGoodsDocCommand implements Serializable {
         /**
          * 属性ID
          */
-        private Long id;
+        private String name;
 
         /**
          * 展示类型
