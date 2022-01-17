@@ -99,7 +99,7 @@ public class EsGoodsSearchQuery {
             this.props.forEach(p -> {
                 NestedQueryBuilder nestedQuery = QueryBuilders.nestedQuery("props",
                         QueryBuilders.boolQuery()
-                                .must(QueryBuilders.termQuery("props.name", p.id))
+                                .must(QueryBuilders.termQuery("props.name", p.name))
                                 .must(QueryBuilders.termsQuery("props.values", p.value)),
                         ScoreMode.Total);
                 builder.filter(nestedQuery);
@@ -141,7 +141,7 @@ public class EsGoodsSearchQuery {
         /**
          * 属性ID
          */
-        private Long id;
+        private String name;
 
         /**
          * 属性值

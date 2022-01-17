@@ -17,7 +17,7 @@ spring:
         group: TRAINEE
 # mybatis 配置
 mybatis:
-  mapper-locations: classpath:com/yuxing/trainee/test/infrastructure/xml/*.xml
+  mapper-locations: classpath:com/yuxing/trainee/test/infrastructure/dao/xml/*.xml
 
 # feign 配置
 feign:
