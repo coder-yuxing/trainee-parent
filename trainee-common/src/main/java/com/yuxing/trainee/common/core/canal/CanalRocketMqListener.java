@@ -1,7 +1,5 @@
 package com.yuxing.trainee.common.core.canal;
 
-import org.apache.rocketmq.spring.core.RocketMQListener;
-
 import java.util.List;
 
 /**
@@ -10,10 +8,9 @@ import java.util.List;
  * @author yuxing
  * @since 2022/1/18
  */
-public abstract class CanalRocketMqListener<T> implements RocketMQListener<CanalMessage<T>> {
+public abstract class CanalRocketMqListener<T> {
 
-    @Override
-    public final void onMessage(CanalMessage<T> message) {
+    public final void parseMessage(CanalMessage<T> message) {
         ChangeType changeType = ChangeType.valueOf(message.getType());
         switch (changeType) {
             case INSERT:
@@ -73,7 +70,7 @@ public abstract class CanalRocketMqListener<T> implements RocketMQListener<Canal
         /**
          * 删除
          */
-        DELETE;
+        DELETE
 
 
     }
