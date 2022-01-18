@@ -2,13 +2,12 @@ package com.yuxing.trainee.test.infrastructure.feign;
 
 import com.yuxing.trainee.common.core.Pager;
 import com.yuxing.trainee.common.core.Result;
+import com.yuxing.trainee.search.api.goods.command.BatchSaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.command.SaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.dto.EsGoodsDTO;
 import com.yuxing.trainee.search.api.goods.query.EsGoodsQuery;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 /**
  * 搜索服务接口
@@ -28,6 +27,12 @@ public interface SearchFeignService {
      */
     @PostMapping("/api/goods")
     Result<?> save(@RequestBody SaveGoodsDocCommand command);
+
+    /**
+     * 批量保存
+     */
+    @PostMapping("/api/goods/all")
+    Result<?> batchSave(@RequestBody BatchSaveGoodsDocCommand command);
 
     /**
      * 根据主键查询单个文档

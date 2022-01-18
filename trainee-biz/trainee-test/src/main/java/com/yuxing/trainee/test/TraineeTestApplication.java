@@ -6,6 +6,7 @@ import com.yuxing.trainee.search.api.goods.constant.EsGoodsAggregationField;
 import com.yuxing.trainee.search.api.goods.dto.EsGoodsDTO;
 import com.yuxing.trainee.search.api.goods.query.EsGoodsQuery;
 import com.yuxing.trainee.test.infrastructure.feign.SearchFeignService;
+import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,6 +22,7 @@ import java.util.Arrays;
  *
  * @author yuxing
  */
+@Slf4j
 @RestController
 @EnableFeignClients
 @EnableDiscoveryClient

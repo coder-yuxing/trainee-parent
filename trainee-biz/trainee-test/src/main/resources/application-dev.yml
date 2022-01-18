@@ -1,6 +1,7 @@
 server:
   port: 8081
 
+# spring 配置
 spring:
   application:
     name: trainee-test-service
@@ -15,6 +16,7 @@ spring:
         namespace: 1ac8447d-28f3-4f59-b428-271e95740ddf
         server-addr: 127.0.0.1:8848
         group: TRAINEE
+
 # mybatis 配置
 mybatis:
   mapper-locations: classpath:com/yuxing/trainee/test/infrastructure/dao/xml/*.xml
@@ -32,6 +34,19 @@ feign:
         # feign client 日志级别
         loggerLevel: full
 
+# rocketmq 配置
+rocketmq:
+  name-server: 127.0.0.1:9876
+
+# 项目自定义配置
 trainee-test:
+  # 依赖的rpc服务
   provider:
     search: trainee-search-service
+  # canal消息监听topic配置
+  canal:
+    consumer:
+      monitor-tables:
+        - t_goods
+      topic: trainee-goods
+      group: trainee-canal-goods-consumer

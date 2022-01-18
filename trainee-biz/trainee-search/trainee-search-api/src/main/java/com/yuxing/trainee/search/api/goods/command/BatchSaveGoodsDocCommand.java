@@ -26,6 +26,7 @@ public class BatchSaveGoodsDocCommand implements Serializable {
     private List<Item> items;
 
 
+    @Data
     public static class Item {
         /**
          * 素材ID
