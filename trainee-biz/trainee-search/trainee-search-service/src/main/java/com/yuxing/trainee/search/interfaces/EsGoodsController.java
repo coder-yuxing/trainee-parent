@@ -2,6 +2,7 @@ package com.yuxing.trainee.search.interfaces;
 
 import com.yuxing.trainee.common.core.Pager;
 import com.yuxing.trainee.common.core.Result;
+import com.yuxing.trainee.search.api.goods.command.BatchSaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.command.SaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.dto.EsGoodsDTO;
 import com.yuxing.trainee.search.api.goods.query.EsGoodsQuery;
@@ -30,6 +31,15 @@ public class EsGoodsController {
     @PostMapping
     public Result<?> save(@RequestBody @Valid SaveGoodsDocCommand command) {
         esGoodsSearchFacadeService.saveDoc(command);
+        return Result.success();
+    }
+
+    /**
+     * 批量保存
+     */
+    @PostMapping("/all")
+    public Result<?> batchSave(@RequestBody @Valid BatchSaveGoodsDocCommand command) {
+        esGoodsSearchFacadeService.batchSaveDocs(command);
         return Result.success();
     }
 

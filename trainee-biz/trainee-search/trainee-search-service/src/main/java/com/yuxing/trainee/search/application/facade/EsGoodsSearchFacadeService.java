@@ -1,6 +1,7 @@
 package com.yuxing.trainee.search.application.facade;
 
 import com.yuxing.trainee.common.core.Pager;
+import com.yuxing.trainee.search.api.goods.command.BatchSaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.command.SaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.dto.EsGoodsDTO;
 import com.yuxing.trainee.search.api.goods.query.EsGoodsQuery;
@@ -14,11 +15,18 @@ import com.yuxing.trainee.search.api.goods.query.EsGoodsQuery;
 public interface EsGoodsSearchFacadeService {
 
     /**
-     * 创建素材文档
+     * 保存素材文档
      *
-     * @param command 新建文档命令
+     * @param command 保存文档命令
      */
     void saveDoc(SaveGoodsDocCommand command);
+
+    /**
+     * 批量保存素材文档
+     *
+     * @param command 批量保存命令
+     */
+    void batchSaveDocs(BatchSaveGoodsDocCommand command);
 
     /**
      * 查询文档

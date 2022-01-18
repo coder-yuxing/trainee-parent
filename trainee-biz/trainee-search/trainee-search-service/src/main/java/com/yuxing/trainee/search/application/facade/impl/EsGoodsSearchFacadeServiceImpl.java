@@ -1,6 +1,7 @@
 package com.yuxing.trainee.search.application.facade.impl;
 
 import com.yuxing.trainee.common.core.Pager;
+import com.yuxing.trainee.search.api.goods.command.BatchSaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.command.SaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.dto.EsGoodsDTO;
 import com.yuxing.trainee.search.api.goods.query.EsGoodsQuery;
@@ -35,6 +36,11 @@ public class EsGoodsSearchFacadeServiceImpl implements EsGoodsSearchFacadeServic
     @Override
     public void saveDoc(SaveGoodsDocCommand command) {
         esGoodsRepository.save(EsGoodsAssembler.INSTANCE.toDo(command));
+    }
+
+    @Override
+    public void batchSaveDocs(BatchSaveGoodsDocCommand command) {
+        esGoodsRepository.saveAll(EsGoodsAssembler.INSTANCE.toDoList(command.getItems()));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.yuxing.trainee.search.application.assembler;
 
+import com.yuxing.trainee.search.api.goods.command.BatchSaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.command.SaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.dto.EsGoodsDTO;
 import com.yuxing.trainee.search.api.goods.query.EsGoodsQuery;
@@ -8,6 +9,8 @@ import com.yuxing.trainee.search.domain.entity.EsGoodsSearchQuery;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 /**
  * @author yuxing
@@ -19,6 +22,10 @@ public interface EsGoodsAssembler {
     EsGoodsAssembler INSTANCE = Mappers.getMapper(EsGoodsAssembler.class);
 
     EsGoods toDo(SaveGoodsDocCommand command);
+
+    List<EsGoods> toDoList(List<BatchSaveGoodsDocCommand.Item> items);
+
+    EsGoods toDo(BatchSaveGoodsDocCommand.Item item);
 
     @Mapping(target = "id", expression = "java(Long.parseLong(esGoods.getId()))")
     EsGoodsDTO toDto(EsGoods esGoods);
