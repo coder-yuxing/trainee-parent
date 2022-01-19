@@ -50,10 +50,6 @@ feign:
 rocketmq:
   name-server: 127.0.0.1:9876
 
-logging:
-  level:
-    com.yuxing.trainee: debug
-
 # 项目自定义配置
 trainee-test:
   # 依赖的rpc服务
@@ -66,4 +62,6 @@ trainee-test:
         - t_goods
       topic: trainee-goods
       group: trainee-canal-goods-consumer
-
+  log:
+    # 日志输出级别
+    level: DEBUG
