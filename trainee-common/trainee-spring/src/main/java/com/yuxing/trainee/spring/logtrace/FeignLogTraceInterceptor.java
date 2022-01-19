@@ -1,4 +1,4 @@
-package com.yuxing.trainee.core.logtrace;
+package com.yuxing.trainee.spring.logtrace;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

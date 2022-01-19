@@ -1,4 +1,4 @@
-package com.yuxing.trainee.core.logtrace;
+package com.yuxing.trainee.spring.logtrace;
 
 /**
  * 常量

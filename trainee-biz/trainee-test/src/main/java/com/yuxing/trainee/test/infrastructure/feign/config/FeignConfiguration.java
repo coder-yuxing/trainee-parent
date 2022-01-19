@@ -1,6 +1,6 @@
 package com.yuxing.trainee.test.infrastructure.feign.config;
 
-import com.yuxing.trainee.core.logtrace.FeignLogTraceInterceptor;
+import com.yuxing.trainee.spring.logtrace.FeignLogTraceInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

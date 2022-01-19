@@ -5,4 +5,4 @@
  * @author yuxing
  * @since 2022/1/19
  */
-package com.yuxing.trainee.core.logtrace;
+package com.yuxing.trainee.spring.logtrace;

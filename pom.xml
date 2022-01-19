@@ -215,6 +215,12 @@
         <version>${trainee-version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>com.yuxing</groupId>
+        <artifactId>trainee-spring</artifactId>
+        <version>${trainee-version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

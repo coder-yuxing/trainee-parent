@@ -1,4 +1,4 @@
-package com.yuxing.trainee.core.logtrace;
+package com.yuxing.trainee.spring.logtrace;
 
 import cn.hutool.core.util.StrUtil;
 import org.slf4j.MDC;

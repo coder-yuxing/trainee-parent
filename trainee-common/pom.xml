@@ -17,6 +17,8 @@
 
     <modules>
         <module>trainee-core</module>
+        <!-- spring 通用配置 -->
+        <module>trainee-spring</module>
     </modules>
 
 </project>

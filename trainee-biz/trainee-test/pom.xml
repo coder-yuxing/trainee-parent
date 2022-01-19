@@ -82,6 +82,11 @@
 
         <dependency>
             <groupId>com.yuxing</groupId>
+            <artifactId>trainee-spring</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yuxing</groupId>
             <artifactId>trainee-search-api</artifactId>
         </dependency>
     </dependencies>
