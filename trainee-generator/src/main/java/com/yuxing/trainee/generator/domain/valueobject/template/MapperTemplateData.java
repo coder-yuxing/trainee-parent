@@ -74,4 +74,11 @@ public class MapperTemplateData {
      * id列名
      */
     private String idColumnName;
+
+    /**
+     * 存在逻辑删除字段
+     */
+    public boolean getHasLogicDeletedField() {
+        return this.columnNameList.contains("is_deleted");
+    }
 }

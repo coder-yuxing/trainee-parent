@@ -27,6 +27,16 @@ public interface ${name} {
      */
     int deleteById(Long id);
 
+    <#if hasLogicDeletedField>
+    /**
+     * 逻辑删除
+     *
+     * @param id id
+     * @return 影响的条数
+     */
+    int removeById(Long id);
+    </#if>
+
     /**
     * 更新
     *

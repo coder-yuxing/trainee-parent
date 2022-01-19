@@ -36,6 +36,12 @@
             ${idColumnName} = ${r"#{"}id${r"}"}
     </delete>
 
+    <#if hasLogicDeletedField>
+    <delete id="removeById" parameterType="${idType}">
+        UPDATE ${tableName} SET is_deleted = 1 WHERE ${idColumnName} = ${r"#{"}id${r"}"}
+    </delete>
+    </#if>
+
     <insert id="insert" parameterType="${beanClassName}" useGeneratedKeys="true" keyProperty="${idColumnName}">
         insert into ${tableName}
         <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -4,6 +4,7 @@ import com.yuxing.trainee.generator.application.Generate;
 import com.yuxing.trainee.generator.application.command.GenerateMapperFileCommand;
 import com.yuxing.trainee.generator.domain.valueobject.datatype.DatabaseType;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,12 +21,18 @@ public class Generator {
 
     public static void main(String[] args) throws Exception {
         GenerateMapperFileCommand.TableConfig tableConfig1 = GenerateMapperFileCommand.TableConfig
-                .builder("t_actuarial_ignore_update_item")
-                .beanName("ActuarialIgnoreUpdateItem")
-                .remarks("忽略清单更新项")
+                .builder("t_user")
+                .beanName("User")
+                .remarks("用户")
                 .build();
+        //
+        // GenerateMapperFileCommand.TableConfig tableConfig2 = GenerateMapperFileCommand.TableConfig
+        //         .builder("t_goods_prop")
+        //         .beanName("GoodsProp")
+        //         .remarks("素材属性属性值")
+        //         .build();
 
-        List<GenerateMapperFileCommand.TableConfig> tableConfigs = Collections.singletonList(tableConfig1);
+        List<GenerateMapperFileCommand.TableConfig> tableConfigs = Arrays.asList(tableConfig1);
         GenerateMapperFileCommand command = GenerateMapperFileCommand.builder("generate.properties", DatabaseType.MYSQL, tableConfigs)
                 .author(AUTHOR)
                 .datePattern(FORMAT)

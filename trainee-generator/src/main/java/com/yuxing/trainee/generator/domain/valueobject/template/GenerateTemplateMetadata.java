@@ -18,6 +18,7 @@ public class GenerateTemplateMetadata {
         this.bean = new BeanTemplateData(config, tableConfig, columns);
         this.mapper = new MapperTemplateData(config, tableConfig, columns);
         this.beanMapper = new BeanMapperTemplateData(config, tableConfig);
+        this.beanMapper.setHasLogicDeletedField(this.mapper.getHasLogicDeletedField());
     }
 
     /**

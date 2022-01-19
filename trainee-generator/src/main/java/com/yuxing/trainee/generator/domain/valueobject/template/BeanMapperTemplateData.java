@@ -77,4 +77,9 @@ public class BeanMapperTemplateData {
      * 主键数据类型
      */
     private DataTypeMapping primaryKeyDataType;
+
+    /**
+     * 存在逻辑删除子弹
+     */
+    private boolean hasLogicDeletedField;
 }
