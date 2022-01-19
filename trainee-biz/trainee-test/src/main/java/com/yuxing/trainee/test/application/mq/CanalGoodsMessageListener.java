@@ -23,6 +23,6 @@ public class CanalGoodsMessageListener implements RocketMQListener<CanalMessage<
 
     @Override
     public void onMessage(CanalMessage<SyncGoodsDataService.Goods> message) {
-        syncGoodsDataService.parseMessage(message);
+        syncGoodsDataService.handle(message);
     }
 }

@@ -2,7 +2,7 @@ package com.yuxing.trainee.test.application.mq;
 
 import cn.hutool.core.collection.CollUtil;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.yuxing.trainee.common.core.canal.CanalRocketMqListener;
+import com.yuxing.trainee.common.core.canal.CanalMessageHandler;
 import com.yuxing.trainee.search.api.goods.command.BatchSaveGoodsDocCommand;
 import com.yuxing.trainee.test.application.assembler.GoodsAssembler;
 import com.yuxing.trainee.test.domain.repository.GoodsRepository;
@@ -11,7 +11,6 @@ import com.yuxing.trainee.test.infrastructure.config.CanalProperties;
 import com.yuxing.trainee.test.infrastructure.feign.SearchFeignService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,15 +18,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 同步素材服务类
+ * 同步素材数据变更服务类
  *
  * @author yuxing
  * @since 2022/1/18
  */
-@Slf4j
 @Service
 @AllArgsConstructor
-public class SyncGoodsDataService extends CanalRocketMqListener<SyncGoodsDataService.Goods> {
+public class SyncGoodsDataService extends CanalMessageHandler<SyncGoodsDataService.Goods> {
 
     private final GoodsRepository goodsRepository;
     private final SearchFeignService searchFeignService;
@@ -41,7 +39,12 @@ public class SyncGoodsDataService extends CanalRocketMqListener<SyncGoodsDataSer
             return;
         }
 
-        List<BatchSaveGoodsDocCommand.Item> collect = changedData.stream().map(d -> {
+        // 删除已标记删除的记录对应的es文档
+        Set<Long> deletedIds = changedData.stream().filter(c -> c.deleted == 1).map(c -> c.id).collect(Collectors.toSet());
+        deletedIds.forEach(searchFeignService::deleteById);
+
+        // 更新剩余记录的es文档
+        List<BatchSaveGoodsDocCommand.Item> collect = changedData.stream().filter(d -> !deletedIds.contains(d.id)).map(d -> {
             com.yuxing.trainee.test.domain.entity.Goods goods = goodsRepository.getById(d.id);
             List<GoodsProp> props = goodsRepository.getPropsById(d.id);
             return GoodsAssembler.INSTANCE.toSaveCommandItem(goods, props);
@@ -61,6 +64,7 @@ public class SyncGoodsDataService extends CanalRocketMqListener<SyncGoodsDataSer
         if (CollUtil.isEmpty(changedData) || !monitorTables.contains(tableName) || isDdl) {
             return;
         }
+        // 已删除记录不保留其es文档
         changedData.forEach(c -> searchFeignService.deleteById(c.id));
     }
 

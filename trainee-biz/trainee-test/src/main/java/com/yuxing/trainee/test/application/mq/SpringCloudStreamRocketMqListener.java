@@ -25,7 +25,7 @@ public class SpringCloudStreamRocketMqListener {
     @Bean
     public Function<Flux<Message<CanalMessage<SyncGoodsDataService.Goods>>>, Mono<Void>> canalGoods() {
         return flux -> flux.map(message -> {
-            syncGoodsDataService.parseMessage(message.getPayload());
+            syncGoodsDataService.handle(message.getPayload());
             return message;
         }).then();
     }

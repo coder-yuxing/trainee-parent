@@ -8,9 +8,14 @@ import java.util.List;
  * @author yuxing
  * @since 2022/1/18
  */
-public abstract class CanalRocketMqListener<T> {
+public abstract class CanalMessageHandler<T> {
 
-    public final void parseMessage(CanalMessage<T> message) {
+    /**
+     * 解析canal消息
+     *
+     * @param message 消息
+     */
+    public final void handle(CanalMessage<T> message) {
         ChangeType changeType = ChangeType.valueOf(message.getType());
         switch (changeType) {
             case INSERT:
