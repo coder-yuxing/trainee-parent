@@ -19,6 +19,8 @@ public class Result<T> implements Serializable {
 
     private T data;
 
+    private String traceId;
+
     public Result() {
     }
 
@@ -105,5 +107,13 @@ public class Result<T> implements Serializable {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
     }
 }
