@@ -1,6 +1,6 @@
 package com.yuxing.trainee.test.application.mq;
 
-import com.yuxing.trainee.common.core.canal.CanalMessage;
+import com.yuxing.trainee.core.canal.CanalMessage;
 import lombok.AllArgsConstructor;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;

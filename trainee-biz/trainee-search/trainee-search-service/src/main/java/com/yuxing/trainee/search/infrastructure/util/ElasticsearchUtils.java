@@ -1,6 +1,6 @@
 package com.yuxing.trainee.search.infrastructure.util;
 
-import com.yuxing.trainee.common.core.Pager;
+import com.yuxing.trainee.core.Pager;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.nested.ParsedNested;

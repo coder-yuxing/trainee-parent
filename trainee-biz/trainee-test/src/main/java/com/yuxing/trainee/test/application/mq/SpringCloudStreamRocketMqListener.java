@@ -1,10 +1,8 @@
 package com.yuxing.trainee.test.application.mq;
 
-import com.yuxing.trainee.common.core.canal.CanalMessage;
+import com.yuxing.trainee.core.canal.CanalMessage;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.Message;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

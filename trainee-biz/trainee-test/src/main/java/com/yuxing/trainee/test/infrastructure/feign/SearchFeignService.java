@@ -1,7 +1,7 @@
 package com.yuxing.trainee.test.infrastructure.feign;
 
-import com.yuxing.trainee.common.core.Pager;
-import com.yuxing.trainee.common.core.Result;
+import com.yuxing.trainee.core.Pager;
+import com.yuxing.trainee.core.Result;
 import com.yuxing.trainee.search.api.goods.command.BatchSaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.command.SaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.dto.EsGoodsDTO;

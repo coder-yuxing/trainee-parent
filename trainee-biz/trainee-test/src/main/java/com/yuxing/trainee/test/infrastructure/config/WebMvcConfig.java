@@ -1,6 +1,6 @@
 package com.yuxing.trainee.test.infrastructure.config;
 
-import com.yuxing.trainee.common.core.logtrace.LogTraceInterceptor;
+import com.yuxing.trainee.core.logtrace.LogTraceInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

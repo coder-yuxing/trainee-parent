@@ -211,7 +211,7 @@
 
       <dependency>
         <groupId>com.yuxing</groupId>
-        <artifactId>trainee-common</artifactId>
+        <artifactId>trainee-core</artifactId>
         <version>${trainee-version}</version>
       </dependency>
 

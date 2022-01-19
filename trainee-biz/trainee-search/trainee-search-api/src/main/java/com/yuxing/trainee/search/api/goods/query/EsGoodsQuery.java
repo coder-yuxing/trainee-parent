@@ -1,6 +1,6 @@
 package com.yuxing.trainee.search.api.goods.query;
 
-import com.yuxing.trainee.common.core.Query;
+import com.yuxing.trainee.core.Query;
 import com.yuxing.trainee.search.api.goods.constant.EsGoodsAggregationField;
 import lombok.*;
 

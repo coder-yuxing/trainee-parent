@@ -2,7 +2,7 @@ package com.yuxing.trainee.test.application.mq;
 
 import cn.hutool.core.collection.CollUtil;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.yuxing.trainee.common.core.canal.CanalMessageHandler;
+import com.yuxing.trainee.core.canal.CanalMessageHandler;
 import com.yuxing.trainee.search.api.goods.command.BatchSaveGoodsDocCommand;
 import com.yuxing.trainee.test.application.assembler.GoodsAssembler;
 import com.yuxing.trainee.test.domain.repository.GoodsRepository;

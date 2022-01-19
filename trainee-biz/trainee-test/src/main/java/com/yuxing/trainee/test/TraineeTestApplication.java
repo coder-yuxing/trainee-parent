@@ -1,7 +1,7 @@
 package com.yuxing.trainee.test;
 
-import com.yuxing.trainee.common.core.Pager;
-import com.yuxing.trainee.common.core.Result;
+import com.yuxing.trainee.core.Pager;
+import com.yuxing.trainee.core.Result;
 import com.yuxing.trainee.search.api.goods.constant.EsGoodsAggregationField;
 import com.yuxing.trainee.search.api.goods.dto.EsGoodsDTO;
 import com.yuxing.trainee.search.api.goods.query.EsGoodsQuery;

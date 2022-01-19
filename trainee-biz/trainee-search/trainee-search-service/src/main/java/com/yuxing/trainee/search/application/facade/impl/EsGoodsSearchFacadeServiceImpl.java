@@ -1,6 +1,6 @@
 package com.yuxing.trainee.search.application.facade.impl;
 
-import com.yuxing.trainee.common.core.Pager;
+import com.yuxing.trainee.core.Pager;
 import com.yuxing.trainee.search.api.goods.command.BatchSaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.command.SaveGoodsDocCommand;
 import com.yuxing.trainee.search.api.goods.dto.EsGoodsDTO;
