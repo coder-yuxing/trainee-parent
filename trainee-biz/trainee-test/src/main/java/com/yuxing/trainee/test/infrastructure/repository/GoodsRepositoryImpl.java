@@ -30,13 +30,13 @@ public class GoodsRepositoryImpl implements GoodsRepository {
 
     @Override
     public Goods getById(Long id) {
-        return GoodsAssembler.INSTENCE.toDo(goodsMapper.getById(id));
+        return GoodsAssembler.INSTANCE.toDo(goodsMapper.getById(id));
     }
 
     @Override
     public void save(Goods goods) {
         Long id = goods.getId();
-        GoodsPO goodsPO = GoodsAssembler.INSTENCE.toPo(goods);
+        GoodsPO goodsPO = GoodsAssembler.INSTANCE.toPo(goods);
         if (Objects.isNull(id)) {
             goodsMapper.insert(goodsPO);
         } else {
@@ -52,7 +52,7 @@ public class GoodsRepositoryImpl implements GoodsRepository {
             if (hasCreated) {
                 goodsPropMapper.deleteByGoodsId(goods.getId());
             }
-            List<GoodsPropPO> propList = GoodsAssembler.INSTENCE.toPropPoList(props, goods.getId());
+            List<GoodsPropPO> propList = GoodsAssembler.INSTANCE.toPropPoList(props, goods.getId());
             goodsPropMapper.batchInsert(propList);
         }
     }
@@ -65,6 +65,6 @@ public class GoodsRepositoryImpl implements GoodsRepository {
     @Override
     public List<GoodsProp> getPropsById(Long id) {
         List<GoodsPropPO> propList = goodsPropMapper.listByGoods(id);
-        return GoodsAssembler.INSTENCE.toPropDoList(propList);
+        return GoodsAssembler.INSTANCE.toPropDoList(propList);
     }
 }

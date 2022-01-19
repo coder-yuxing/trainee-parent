@@ -19,7 +19,7 @@ import java.util.List;
 @Mapper
 public interface GoodsAssembler {
 
-    GoodsAssembler INSTENCE = Mappers.getMapper(GoodsAssembler.class);
+    GoodsAssembler INSTANCE = Mappers.getMapper(GoodsAssembler.class);
 
     Goods toDo(GoodsPO po);
 
