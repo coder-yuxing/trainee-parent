@@ -1,5 +1,7 @@
 package com.yuxing.trainee.common.core.canal;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 
 /**
@@ -8,6 +10,7 @@ import java.util.List;
  * @author yuxing
  * @since 2022/1/18
  */
+@Slf4j
 public abstract class CanalMessageHandler<T> {
 
     /**
@@ -17,6 +20,8 @@ public abstract class CanalMessageHandler<T> {
      */
     public final void handle(CanalMessage<T> message) {
         ChangeType changeType = ChangeType.valueOf(message.getType());
+        log.info("received a canal {} message, {} of {} data docs are expected to be affected.", changeType, message.getData().size(), message.getTable());
+        log.debug("the detail of canal message is: {}", message);
         switch (changeType) {
             case INSERT:
                 this.doInsert(message.getTable(), message.getData(), message.getIsDdl());

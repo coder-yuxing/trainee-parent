@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -69,7 +70,9 @@ public class SyncGoodsDataService extends CanalMessageHandler<SyncGoodsDataServi
     }
 
     @Data
-    public static class Goods {
+    public static class Goods implements Serializable {
+
+        private static final long serialVersionUID = 8536624505942522941L;
 
         /**
          * ID

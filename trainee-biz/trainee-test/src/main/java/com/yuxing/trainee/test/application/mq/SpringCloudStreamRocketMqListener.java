@@ -16,13 +16,16 @@ import java.util.function.Function;
  * @author yuxing
  * @since 2022/1/18
  */
-@Component
+// @Component
 @AllArgsConstructor
 public class SpringCloudStreamRocketMqListener {
 
     private final SyncGoodsDataService syncGoodsDataService;
 
-    @Bean
+    /**
+     * 此方法名与配置文件中 function definition 及 {input}-in-{num}保持一致
+     */
+    // @Bean
     public Function<Flux<Message<CanalMessage<SyncGoodsDataService.Goods>>>, Mono<Void>> canalGoods() {
         return flux -> flux.map(message -> {
             syncGoodsDataService.handle(message.getPayload());

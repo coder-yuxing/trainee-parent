@@ -16,17 +16,17 @@ spring:
         namespace: 1ac8447d-28f3-4f59-b428-271e95740ddf
         server-addr: 127.0.0.1:8848
         group: TRAINEE
-    function:
-      definition: canalGoods
-    stream:
-      # spring-cloud-starter-stream-rocketmq 配置
-      rocketmq:
-        binder:
-          name-server: 127.0.0.1:9876
-      bindings:
-        canalGoods-in-0:
-          destination: trainee-goods
-          group: trainee-canal-goods-consumer
+#    function:
+#      definition: canalGoods
+#    stream:
+#      # spring-cloud-starter-stream-rocketmq 配置
+#      rocketmq:
+#        binder:
+#          name-server: 127.0.0.1:9876
+#      bindings:
+#        canalGoods-in-0:
+#          destination: trainee-goods
+#          group: trainee-canal-goods-consumer
 
 
 # mybatis 配置
@@ -47,8 +47,12 @@ feign:
         loggerLevel: full
 
 # rocketmq-spring-boot-starter 配置
-#rocketmq:
-#  name-server: 127.0.0.1:9876
+rocketmq:
+  name-server: 127.0.0.1:9876
+
+logging:
+  level:
+    com.yuxing.trainee: debug
 
 # 项目自定义配置
 trainee-test:
@@ -62,3 +66,4 @@ trainee-test:
         - t_goods
       topic: trainee-goods
       group: trainee-canal-goods-consumer
+

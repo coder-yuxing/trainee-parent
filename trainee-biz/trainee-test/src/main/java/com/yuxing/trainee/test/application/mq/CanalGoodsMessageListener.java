@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
  * @author yuxing
  * @since 2022/1/17
  */
-// @Component
+@Component
 @AllArgsConstructor
-// @RocketMQMessageListener(topic = "${trainee-test.canal.consumer.topic}", consumerGroup = "${trainee-test.canal.consumer.group}")
+@RocketMQMessageListener(topic = "${trainee-test.canal.consumer.topic}", consumerGroup = "${trainee-test.canal.consumer.group}")
 public class CanalGoodsMessageListener implements RocketMQListener<CanalMessage<SyncGoodsDataService.Goods>> {
 
     private final SyncGoodsDataService syncGoodsDataService;
