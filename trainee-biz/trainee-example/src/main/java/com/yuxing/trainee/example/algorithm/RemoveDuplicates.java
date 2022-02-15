@@ -23,39 +23,24 @@ public class RemoveDuplicates {
      * @return 删除后数组新长度
      */
     public static int removeDuplicates(int[] nums) {
-        int currentNum = 0;
-        int count = 0;
-        int result = 0;
-        for (int i = 0; i < nums.length; i++) {
-            int nowNum = nums[i];
-            if (nowNum == -1) {
-                result = i;
-                break;
-            }
-            if (count == 0) {
-                currentNum = nowNum;
-                count++;
-            }
-            else if (count == 1) {
-                if (nowNum == currentNum) {
-                    count++;
-                } else {
-                    currentNum = nowNum;
-                }
-            }
-            else if (count == 2) {
-                if (nowNum == currentNum) {
-                    System.arraycopy(nums, i + 1, nums, i + 1 - 1, nums.length - (i + 1));
-                    nums[nums.length - 1] = -1;
-                    i--;
-                } else {
-                    currentNum = nowNum;
-                    count = 1;
-                }
-            }
+        int length = nums.length;
+        // 每个元素最多出现两次，数组长度小于等于2必然满足要求
+        if (length <= 2) {
+            return length;
         }
+        // 当前待检查元素的数组下标
+        int fast = 2;
+        // 上一个已检查元素的数组下标
+        int slow = 2;
+        while (fast < length) {
+            if (nums[slow - 2] != nums[fast]) {
+                nums[slow] = nums[fast];
+                ++slow;
+            }
+            ++fast;
+        }
+        return slow;
 
-        return result;
     }
 
 }
