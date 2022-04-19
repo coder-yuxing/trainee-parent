@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  #服务名
+  consul-01:
+    #容器名
+    container_name: consul-01
+    #使用的镜像
+    image: consul:1.6.0
+    #映射的端口
+    ports:
+      - "8500:8500"
+    #映射的目录
+    volumes:
+      - ./data/consul/config:/consul/config
+      - ./data/consul/data:/consul/data
+    #需要导入的环境变量
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+      - TZ=Asia/Shanghai
+    #是否伴随docker重启
+    restart: always
+    networks:
+      default:
+        ipv4_address: 172.28.0.17
+
+networks:
+  default:
+    external:
+      name: trainee-network
