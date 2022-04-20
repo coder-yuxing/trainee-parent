@@ -17,6 +17,8 @@
     <module>trainee-generator</module>
     <module>trainee-netty</module>
     <module>trainee-kotlin</module>
+    <!-- consul 学习模块 服务注册与发现API    -->
+    <module>trainee-consul</module>
   </modules>
 
   <properties>
@@ -51,6 +53,8 @@
     <jmh.version>1.32</jmh.version>
 
     <netty.version>4.1.72.Final</netty.version>
+    <consul.version>1.5.3</consul.version>
+
   </properties>
 
   <dependencyManagement>
@@ -220,6 +224,13 @@
         <artifactId>trainee-spring</artifactId>
         <version>${trainee-version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.orbitz.consul</groupId>
+        <artifactId>consul-client</artifactId>
+        <version>${consul.version}</version>
+      </dependency>
+
 
     </dependencies>
   </dependencyManagement>
