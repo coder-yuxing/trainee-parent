@@ -37,6 +37,7 @@ public class Generator {
                 .author(AUTHOR)
                 .datePattern(FORMAT)
                 .isCover(true)
+                .needExtMapper(true)
                 .beanModuleName("trainee-biz/trainee-test")
                 .beanPackage("com.yuxing.trainee.test.infrastructure.dao.model")
                 .mapperModuleName("trainee-biz/trainee-test")

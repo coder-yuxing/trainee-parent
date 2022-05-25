@@ -83,6 +83,11 @@ public class GlobalConfig {
      */
     private String beanMapperPackage;
 
+    /**
+     * 需求扩展Mapper
+     */
+    private boolean needExtMapper;
+
     public void setCover(boolean cover) {
         isCover = cover;
     }
@@ -115,4 +120,7 @@ public class GlobalConfig {
         this.beanMapperPackage = Optional.ofNullable(beanMapperPackage).orElse(DEFAULT_PACKAGE);
     }
 
+    public void setNeedExtMapper(boolean needExtMapper) {
+        this.needExtMapper = needExtMapper;
+    }
 }

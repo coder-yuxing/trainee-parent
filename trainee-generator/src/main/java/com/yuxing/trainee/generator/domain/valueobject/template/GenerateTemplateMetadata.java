@@ -18,6 +18,10 @@ public class GenerateTemplateMetadata {
         this.bean = new BeanTemplateData(config, tableConfig, columns);
         this.mapper = new MapperTemplateData(config, tableConfig, columns);
         this.beanMapper = new BeanMapperTemplateData(config, tableConfig);
+        if (config.isNeedExtMapper()) {
+            this.extMapper = new ExtMapperTemplateData(config, tableConfig);
+            this.extBeanMapper = new BeanExtMapperTemplateData(config, tableConfig);
+        }
         this.beanMapper.setHasLogicDeletedField(this.mapper.getHasLogicDeletedField());
     }
 
@@ -35,4 +39,16 @@ public class GenerateTemplateMetadata {
      * BeanMapper文件模板数据
      */
     private BeanMapperTemplateData beanMapper;
+
+    /**
+     * 扩展Mapper文件
+     */
+    private ExtMapperTemplateData extMapper;
+
+    /**
+     * BeanExtMapper文件模板数据
+     */
+    private BeanExtMapperTemplateData extBeanMapper;
+
+
 }

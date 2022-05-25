@@ -32,7 +32,12 @@ public class GenerateMapperFileCommand {
         }
 
         public GenerateMapperFileCommandBuilder isCover(boolean cover) {
-            isCover = cover;
+            this.isCover = cover;
+            return this;
+        }
+
+        public GenerateMapperFileCommandBuilder needExtMapper(boolean needExtMapper) {
+            this.needExtMapper = needExtMapper;
             return this;
         }
 
@@ -74,6 +79,7 @@ public class GenerateMapperFileCommand {
         public GenerateMapperFileCommand build() {
             GenerateMapperFileCommand command = new GenerateMapperFileCommand(this);
             command.isCover = this.isCover;
+            command.needExtMapper = this.needExtMapper;
             command.author = this.author;
             command.datePattern = this.datePattern;
             command.beanPackage = this.beanPackage;
@@ -103,6 +109,11 @@ public class GenerateMapperFileCommand {
          * 是否覆盖文件
          */
         private boolean isCover;
+
+        /**
+         * 需要扩展Mapper
+         */
+        private boolean needExtMapper;
 
         /**
          * 创建人
@@ -159,6 +170,11 @@ public class GenerateMapperFileCommand {
      * 是否覆盖文件
      */
     private boolean isCover;
+
+    /**
+     * 需要扩展Mapper
+     */
+    private boolean needExtMapper;
 
     /**
      * 创建人
